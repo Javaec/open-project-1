@@ -14,9 +14,15 @@ public class PlayAudioCueActionSO : StateActionSO<PlayAudioCueAction>
 
 public class PlayAudioCueAction : StateAction
 {
-	private Transform _stateMachineTransform;
+	Transform _stateMachineTransform;
 
-	private PlayAudioCueActionSO _originSO => (PlayAudioCueActionSO)base.OriginSO; // The SO this StateAction spawned from
+	PlayAudioCueActionSO _originSO
+	{
+		get
+		{
+			return (PlayAudioCueActionSO)OriginSO; // The SO this StateAction spawned from
+		}
+	}
 
 	public override void Awake(StateMachine stateMachine)
 	{

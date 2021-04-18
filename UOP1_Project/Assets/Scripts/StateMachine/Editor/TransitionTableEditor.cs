@@ -9,33 +9,33 @@ using Object = UnityEngine.Object;
 namespace UOP1.StateMachine.Editor
 {
 	[CustomEditor(typeof(TransitionTableSO))]
-	internal class TransitionTableEditor : UnityEditor.Editor
+	class TransitionTableEditor : UnityEditor.Editor
 	{
 		// Property with all the transitions.
-		private SerializedProperty _transitions;
+		SerializedProperty _transitions;
 
 		// _fromStates and _transitionsByFromStates form a State->Transitions dictionary.
-		private List<Object> _fromStates;
-		private List<List<TransitionDisplayHelper>> _transitionsByFromStates;
+		List<Object> _fromStates;
+		List<List<TransitionDisplayHelper>> _transitionsByFromStates;
 
 		// Index of the state currently toggled on, -1 if none is.
 		internal int _toggledIndex = -1;
 
 		// Helper class to add new transitions.
-		private AddTransitionHelper _addTransitionHelper;
+		AddTransitionHelper _addTransitionHelper;
 
 		// Editor to display the StateSO inspector.
-		private UnityEditor.Editor _cachedStateEditor;
-		private bool _displayStateEditor;
+		UnityEditor.Editor _cachedStateEditor;
+		bool _displayStateEditor;
 
-		private void OnEnable()
+		void OnEnable()
 		{
 			_addTransitionHelper = new AddTransitionHelper(this);
 			Undo.undoRedoPerformed += Reset;
 			Reset();
 		}
 
-		private void OnDisable()
+		void OnDisable()
 		{
 			Undo.undoRedoPerformed -= Reset;
 			_addTransitionHelper?.Dispose();
@@ -47,7 +47,7 @@ namespace UOP1.StateMachine.Editor
 		internal void Reset()
 		{
 			serializedObject.Update();
-			var toggledState = _toggledIndex > -1 ? _fromStates[_toggledIndex] : null;
+			Object toggledState = _toggledIndex > -1 ? _fromStates[_toggledIndex] : null;
 			_transitions = serializedObject.FindProperty("_transitions");
 			GroupByFromState();
 			_toggledIndex = toggledState ? _fromStates.IndexOf(toggledState) : -1;
@@ -56,18 +56,22 @@ namespace UOP1.StateMachine.Editor
 		public override void OnInspectorGUI()
 		{
 			if (!_displayStateEditor)
+			{
 				TransitionTableGUI();
+			}
 			else
+			{
 				StateEditorGUI();
+			}
 		}
 
-		private void StateEditorGUI()
+		void StateEditorGUI()
 		{
 			Separator();
 
 			// Back button
 			if (GUILayout.Button(EditorGUIUtility.IconContent("scrollleft"), GUILayout.Width(35), GUILayout.Height(20))
-				|| _cachedStateEditor.serializedObject == null)
+			    || _cachedStateEditor.serializedObject == null)
 			{
 				_displayStateEditor = false;
 				return;
@@ -75,36 +79,38 @@ namespace UOP1.StateMachine.Editor
 
 
 			Separator();
-			EditorGUILayout.HelpBox("Edit the Actions that a State performs per frame. The order represent the order of execution.", MessageType.Info);
+			HelpBox("Edit the Actions that a State performs per frame. The order represent the order of execution.", MessageType.Info);
 			Separator();
 
 			// State name
-			EditorGUILayout.LabelField(_cachedStateEditor.target.name, EditorStyles.boldLabel);
+			LabelField(_cachedStateEditor.target.name, EditorStyles.boldLabel);
 			Separator();
 			_cachedStateEditor.OnInspectorGUI();
 		}
 
-		private void TransitionTableGUI()
+		void TransitionTableGUI()
 		{
 			Separator();
-			EditorGUILayout.HelpBox("Click on any State's name to see the Transitions it contains, or click the Pencil/Wrench icon to see its Actions.", MessageType.Info);
+			HelpBox("Click on any State's name to see the Transitions it contains, or click the Pencil/Wrench icon to see its Actions.", MessageType.Info);
 			Separator();
 
 			// For each fromState
 			for (int i = 0; i < _fromStates.Count; i++)
 			{
-				var stateRect = BeginVertical(ContentStyle.WithPaddingAndMargins);
+				Rect stateRect = BeginVertical(ContentStyle.WithPaddingAndMargins);
 				EditorGUI.DrawRect(stateRect, ContentStyle.LightGray);
 
-				var transitions = _transitionsByFromStates[i];
+				List<TransitionDisplayHelper> transitions = _transitionsByFromStates[i];
 
 				// State Header
-				var headerRect = BeginHorizontal();
+				Rect headerRect = BeginHorizontal();
 				{
 					BeginVertical();
 					string label = transitions[0].SerializedTransition.FromState.objectReferenceValue.name;
 					if (i == 0)
+					{
 						label += " (Initial State)";
+					}
 
 					headerRect.height = EditorGUIUtility.singleLineHeight;
 					GUILayoutUtility.GetRect(headerRect.width, headerRect.height);
@@ -112,11 +118,11 @@ namespace UOP1.StateMachine.Editor
 
 					// Toggle
 					{
-						var toggleRect = headerRect;
+						Rect toggleRect = headerRect;
 						toggleRect.width -= 140;
 						_toggledIndex =
-							EditorGUI.BeginFoldoutHeaderGroup(toggleRect, _toggledIndex == i, label, ContentStyle.StateListStyle) ?
-							i : _toggledIndex == i ? -1 : _toggledIndex;
+							EditorGUI.BeginFoldoutHeaderGroup(toggleRect, _toggledIndex == i, label, ContentStyle.StateListStyle) ? i :
+							_toggledIndex == i ? -1 : _toggledIndex;
 					}
 
 					Separator();
@@ -124,9 +130,12 @@ namespace UOP1.StateMachine.Editor
 
 					// State Header Buttons
 					{
-						bool Button(Rect position, string icon) => GUI.Button(position, EditorGUIUtility.IconContent(icon));
+						bool Button(Rect position, string icon)
+						{
+							return GUI.Button(position, EditorGUIUtility.IconContent(icon));
+						}
 
-						var buttonRect = new Rect(x: headerRect.width - 25, y: headerRect.y, width: 35, height: 20);
+						Rect buttonRect = new Rect(headerRect.width - 25, headerRect.y, 35, 20);
 
 						// Move state down
 						if (i < _fromStates.Count - 1)
@@ -137,6 +146,7 @@ namespace UOP1.StateMachine.Editor
 								EarlyOut();
 								return;
 							}
+
 							buttonRect.x -= 40;
 						}
 
@@ -149,6 +159,7 @@ namespace UOP1.StateMachine.Editor
 								EarlyOut();
 								return;
 							}
+
 							buttonRect.x -= 40;
 						}
 
@@ -176,7 +187,7 @@ namespace UOP1.StateMachine.Editor
 					EditorGUI.BeginChangeCheck();
 					stateRect.y += EditorGUIUtility.singleLineHeight * 2;
 
-					foreach (var transition in transitions) // Display all the transitions in the state
+					foreach (TransitionDisplayHelper transition in transitions) // Display all the transitions in the state
 					{
 						if (transition.Display(ref stateRect)) // Return if there were changes
 						{
@@ -186,10 +197,14 @@ namespace UOP1.StateMachine.Editor
 							EndHorizontal();
 							return;
 						}
+
 						Separator();
 					}
+
 					if (EditorGUI.EndChangeCheck())
+					{
 						serializedObject.ApplyModifiedProperties();
+					}
 				}
 
 				EndFoldoutHeaderGroup();
@@ -197,7 +212,7 @@ namespace UOP1.StateMachine.Editor
 				Separator();
 			}
 
-			var rect = BeginHorizontal();
+			Rect rect = BeginHorizontal();
 			Space(rect.width - 55);
 
 			// Display add transition button
@@ -209,9 +224,13 @@ namespace UOP1.StateMachine.Editor
 		internal void DisplayStateEditor(Object state)
 		{
 			if (_cachedStateEditor == null)
+			{
 				_cachedStateEditor = CreateEditor(state, typeof(StateEditor));
+			}
 			else
+			{
 				CreateCachedEditor(state, typeof(StateEditor), ref _cachedStateEditor);
+			}
 
 			_displayStateEditor = true;
 		}
@@ -223,12 +242,14 @@ namespace UOP1.StateMachine.Editor
 		/// <param name="up">Moving up(true) or down(true)</param>
 		internal void ReorderState(int index, bool up)
 		{
-			var toggledState = _toggledIndex > -1 ? _fromStates[_toggledIndex] : null;
+			Object toggledState = _toggledIndex > -1 ? _fromStates[_toggledIndex] : null;
 
 			if (!up)
+			{
 				index++;
+			}
 
-			var transitions = _transitionsByFromStates[index];
+			List<TransitionDisplayHelper> transitions = _transitionsByFromStates[index];
 			int transitionIndex = transitions[0].SerializedTransition.Index;
 			int targetIndex = _transitionsByFromStates[index - 1][0].SerializedTransition.Index;
 			_transitions.MoveArrayElement(transitionIndex, targetIndex);
@@ -236,7 +257,9 @@ namespace UOP1.StateMachine.Editor
 			ApplyModifications($"Moved {_fromStates[index].name} State {(up ? "up" : "down")}");
 
 			if (toggledState)
+			{
 				_toggledIndex = _fromStates.IndexOf(toggledState);
+			}
 		}
 
 		/// <summary>
@@ -276,12 +299,13 @@ namespace UOP1.StateMachine.Editor
 		internal void ReorderTransition(SerializedTransition serializedTransition, bool up)
 		{
 			int stateIndex = _fromStates.IndexOf(serializedTransition.FromState.objectReferenceValue);
-			var stateTransitions = _transitionsByFromStates[stateIndex];
+			List<TransitionDisplayHelper> stateTransitions = _transitionsByFromStates[stateIndex];
 			int index = stateTransitions.FindIndex(t => t.SerializedTransition.Index == serializedTransition.Index);
 
-			(int currentIndex, int targetIndex) = up ?
-				(serializedTransition.Index, stateTransitions[index - 1].SerializedTransition.Index) :
-				(stateTransitions[index + 1].SerializedTransition.Index, serializedTransition.Index);
+			(int currentIndex, int targetIndex) =
+				up
+					? (serializedTransition.Index, stateTransitions[index - 1].SerializedTransition.Index)
+					: (stateTransitions[index + 1].SerializedTransition.Index, serializedTransition.Index);
 
 			_transitions.MoveArrayElement(currentIndex, targetIndex);
 
@@ -297,21 +321,25 @@ namespace UOP1.StateMachine.Editor
 		internal void RemoveTransition(SerializedTransition serializedTransition)
 		{
 			int stateIndex = _fromStates.IndexOf(serializedTransition.FromState.objectReferenceValue);
-			var stateTransitions = _transitionsByFromStates[stateIndex];
+			List<TransitionDisplayHelper> stateTransitions = _transitionsByFromStates[stateIndex];
 			int count = stateTransitions.Count;
 			int index = stateTransitions.FindIndex(t => t.SerializedTransition.Index == serializedTransition.Index);
 			int deleteIndex = serializedTransition.Index;
 
 			if (index == 0 && count > 1)
+			{
 				_transitions.MoveArrayElement(stateTransitions[1].SerializedTransition.Index, deleteIndex++);
+			}
 
 			_transitions.DeleteArrayElementAtIndex(deleteIndex);
 
 			ApplyModifications($"Deleted transition from {serializedTransition.FromState.objectReferenceValue.name} " +
-				"to {serializedTransition.ToState.objectReferenceValue.name}");
+			                   "to {serializedTransition.ToState.objectReferenceValue.name}");
 
 			if (count > 1)
+			{
 				_toggledIndex = stateIndex;
+			}
 		}
 
 		internal List<SerializedTransition> GetStateTransitions(Object state)
@@ -319,25 +347,27 @@ namespace UOP1.StateMachine.Editor
 			return _transitionsByFromStates[_fromStates.IndexOf(state)].Select(t => t.SerializedTransition).ToList();
 		}
 
-		private void CopyConditions(SerializedProperty copyTo, SerializedProperty copyFrom)
+		void CopyConditions(SerializedProperty copyTo, SerializedProperty copyFrom)
 		{
 			for (int i = 0, j = copyTo.arraySize; i < copyFrom.arraySize; i++, j++)
 			{
 				copyTo.InsertArrayElementAtIndex(j);
-				var cond = copyTo.GetArrayElementAtIndex(j);
-				var srcCond = copyFrom.GetArrayElementAtIndex(i);
+				SerializedProperty cond = copyTo.GetArrayElementAtIndex(j);
+				SerializedProperty srcCond = copyFrom.GetArrayElementAtIndex(i);
 				cond.FindPropertyRelative("ExpectedResult").enumValueIndex = srcCond.FindPropertyRelative("ExpectedResult").enumValueIndex;
 				cond.FindPropertyRelative("Operator").enumValueIndex = srcCond.FindPropertyRelative("Operator").enumValueIndex;
 				cond.FindPropertyRelative("Condition").objectReferenceValue = srcCond.FindPropertyRelative("Condition").objectReferenceValue;
 			}
 		}
 
-		private bool TryGetExistingTransition(SerializedProperty from, SerializedProperty to, out int fromIndex, out int toIndex)
+		bool TryGetExistingTransition(SerializedProperty from, SerializedProperty to, out int fromIndex, out int toIndex)
 		{
 			fromIndex = _fromStates.IndexOf(from.objectReferenceValue);
 			toIndex = -1;
 			if (fromIndex < 0)
+			{
 				return false;
+			}
 
 			toIndex = _transitionsByFromStates[fromIndex].FindIndex(
 				transitionHelper => transitionHelper.SerializedTransition.ToState.objectReferenceValue == to.objectReferenceValue);
@@ -345,13 +375,13 @@ namespace UOP1.StateMachine.Editor
 			return toIndex >= 0;
 		}
 
-		private void GroupByFromState()
+		void GroupByFromState()
 		{
-			var groupedTransitions = new Dictionary<Object, List<TransitionDisplayHelper>>();
+			Dictionary<Object, List<TransitionDisplayHelper>> groupedTransitions = new Dictionary<Object, List<TransitionDisplayHelper>>();
 			int count = _transitions.arraySize;
 			for (int i = 0; i < count; i++)
 			{
-				var serializedTransition = new SerializedTransition(_transitions, i);
+				SerializedTransition serializedTransition = new SerializedTransition(_transitions, i);
 				if (serializedTransition.FromState.objectReferenceValue == null)
 				{
 					Debug.LogError("Transition with invalid \"From State\" found in table " + serializedObject.targetObject.name + ", deleting...");
@@ -359,6 +389,7 @@ namespace UOP1.StateMachine.Editor
 					ApplyModifications("Invalid transition deleted");
 					return;
 				}
+
 				if (serializedTransition.ToState.objectReferenceValue == null)
 				{
 					Debug.LogError("Transition with invalid \"Target State\" found in table " + serializedObject.targetObject.name + ", deleting...");
@@ -367,21 +398,24 @@ namespace UOP1.StateMachine.Editor
 					return;
 				}
 
-				if (!groupedTransitions.TryGetValue(serializedTransition.FromState.objectReferenceValue, out var groupedProps))
+				if (!groupedTransitions.TryGetValue(serializedTransition.FromState.objectReferenceValue, out List<TransitionDisplayHelper> groupedProps))
 				{
 					groupedProps = new List<TransitionDisplayHelper>();
 					groupedTransitions.Add(serializedTransition.FromState.objectReferenceValue, groupedProps);
 				}
+
 				groupedProps.Add(new TransitionDisplayHelper(serializedTransition, this));
 			}
 
 			_fromStates = groupedTransitions.Keys.ToList();
 			_transitionsByFromStates = new List<List<TransitionDisplayHelper>>();
-			foreach (var fromState in _fromStates)
+			foreach (Object fromState in _fromStates)
+			{
 				_transitionsByFromStates.Add(groupedTransitions[fromState]);
+			}
 		}
 
-		private void ApplyModifications(string msg)
+		void ApplyModifications(string msg)
 		{
 			Undo.RecordObject(serializedObject.targetObject, msg);
 			serializedObject.ApplyModifiedProperties();

@@ -12,7 +12,13 @@ namespace UOP1.StateMachine
 		/// <summary>
 		/// Use this property to access shared data from the <see cref="StateActionSO"/> that corresponds to this <see cref="StateAction"/>
 		/// </summary>
-		protected StateActionSO OriginSO => _originSO;
+		protected StateActionSO OriginSO
+		{
+			get
+			{
+				return _originSO;
+			}
+		}
 
 		/// <summary>
 		/// Called every frame the <see cref="StateMachine"/> is in a <see cref="State"/> with this <see cref="StateAction"/>.
@@ -34,7 +40,7 @@ namespace UOP1.StateMachine
 		/// </summary>
 		public enum SpecificMoment
 		{
-			OnStateEnter, OnStateExit, OnUpdate,
+			OnStateEnter, OnStateExit, OnUpdate
 		}
 	}
 }

@@ -10,15 +10,15 @@ public enum DialogueType
 	startDialogue,
 	winDialogue,
 	loseDialogue,
-	defaultDialogue,
-
+	defaultDialogue
 }
+
 public enum ChoiceActionType
 {
 	doNothing,
 	continueWithStep
-
 }
+
 /// <summary>
 /// A Dialogue is a list of consecutive DialogueLines. They play in sequence using the input of the player to skip forward.
 /// In future versions it might contain support for branching conversations.
@@ -26,26 +26,53 @@ public enum ChoiceActionType
 [CreateAssetMenu(fileName = "newDialogue", menuName = "Dialogues/Dialogue Data")]
 public class DialogueDataSO : ScriptableObject
 {
+	[SerializeField] ActorSO _actor = default;
+	[SerializeField] List<LocalizedString> _dialogueLines = default;
+	[SerializeField] List<Choice> _choices = default;
+	[SerializeField] DialogueType _dialogueType = default;
 
-	[SerializeField] private ActorSO _actor = default;
-	[SerializeField] private List<LocalizedString> _dialogueLines = default;
-	[SerializeField] private List<Choice> _choices = default;
-	[SerializeField] private DialogueType _dialogueType = default;
+	public ActorSO Actor
+	{
+		get
+		{
+			return _actor;
+		}
+	}
 
-	public ActorSO Actor => _actor;
-	public List<LocalizedString> DialogueLines => _dialogueLines;
-	public List<Choice> Choices => _choices;
-	public DialogueType DialogueType => _dialogueType;
+	public List<LocalizedString> DialogueLines
+	{
+		get
+		{
+			return _dialogueLines;
+		}
+	}
+
+	public List<Choice> Choices
+	{
+		get
+		{
+			return _choices;
+		}
+	}
+
+	public DialogueType DialogueType
+	{
+		get
+		{
+			return _dialogueType;
+		}
+	}
 
 #if UNITY_EDITOR
 
 	//TODO: Add support for branching conversations
 	// Maybe add 2 (or more) special line slots which represent a choice in a conversation
 	// Each line would also have an event associated, or another Dialogue
-	private void OnEnable()
+	void OnEnable()
 	{
 		SetDialogueLines();
 	}
+
 	void SetDialogueLines()
 	{
 		_dialogueLines.Clear();
@@ -59,21 +86,18 @@ public class DialogueDataSO : ScriptableObject
 			do
 			{
 				index++;
-				string key = "L" + index + "-" + this.name;
+				string key = "L" + index + "-" + name;
 
 				if (collection.SharedData.Contains(key))
 				{
-					_dialogueLine = new LocalizedString() { TableReference = "Questline Dialogue", TableEntryReference = key };
+					_dialogueLine = new LocalizedString() {TableReference = "Questline Dialogue", TableEntryReference = key};
 					_dialogueLines.Add(_dialogueLine);
 				}
 				else
 				{
-
 					_dialogueLine = null;
 				}
-
 			} while (_dialogueLine != null);
-
 		}
 	}
 #endif
@@ -83,10 +107,31 @@ public class DialogueDataSO : ScriptableObject
 [Serializable]
 public class Choice
 {
-	[SerializeField] private LocalizedString _response = default;
-	[SerializeField] private DialogueDataSO _nextDialogue = default;
-	[SerializeField] private ChoiceActionType _actionType = default;
-	public LocalizedString Response => _response;
-	public DialogueDataSO NextDialogue => _nextDialogue;
-	public ChoiceActionType ActionType => _actionType;
+	[SerializeField] LocalizedString _response = default;
+	[SerializeField] DialogueDataSO _nextDialogue = default;
+	[SerializeField] ChoiceActionType _actionType = default;
+
+	public LocalizedString Response
+	{
+		get
+		{
+			return _response;
+		}
+	}
+
+	public DialogueDataSO NextDialogue
+	{
+		get
+		{
+			return _nextDialogue;
+		}
+	}
+
+	public ChoiceActionType ActionType
+	{
+		get
+		{
+			return _actionType;
+		}
+	}
 }

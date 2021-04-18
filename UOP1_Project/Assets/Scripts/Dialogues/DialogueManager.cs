@@ -14,31 +14,39 @@ public class DialogueManager : MonoBehaviour
 {
 	//	[SerializeField] private ChoiceBox _choiceBox; // TODO: Demonstration purpose only. Remove or adjust later.
 
-	[SerializeField] private InputReader _inputReader = default;
-	private int _counter;
-	private bool _reachedEndOfDialogue { get => _counter >= _currentDialogue.DialogueLines.Count; }
+	[SerializeField] InputReader _inputReader = default;
+	int _counter;
 
-	[Header("Listening on channels")]
-	[SerializeField] private DialogueDataChannelSO _startDialogue = default;
-	[SerializeField] private DialogueChoiceChannelSO _makeDialogueChoiceEvent = default;
+	bool _reachedEndOfDialogue
+	{
+		get
+		{
+			return _counter >= _currentDialogue.DialogueLines.Count;
+		}
+	}
 
-	[Header("BoradCasting on channels")]
-	[SerializeField] private DialogueLineChannelSO _openUIDialogueEvent = default;
-	[SerializeField] private DialogueChoicesChannelSO _showChoicesUIEvent = default;
-	[SerializeField] private DialogueDataChannelSO _endDialogue = default;
-	[SerializeField] private VoidEventChannelSO _continueWithStep = default;
-	[SerializeField] private VoidEventChannelSO _closeDialogueUIEvent = default;
+	[Header("Listening on channels")] [SerializeField]
+	DialogueDataChannelSO _startDialogue = default;
+
+	[SerializeField] DialogueChoiceChannelSO _makeDialogueChoiceEvent = default;
+
+	[Header("BoradCasting on channels")] [SerializeField]
+	DialogueLineChannelSO _openUIDialogueEvent = default;
+
+	[SerializeField] DialogueChoicesChannelSO _showChoicesUIEvent = default;
+	[SerializeField] DialogueDataChannelSO _endDialogue = default;
+	[SerializeField] VoidEventChannelSO _continueWithStep = default;
+	[SerializeField] VoidEventChannelSO _closeDialogueUIEvent = default;
 
 
-	private DialogueDataSO _currentDialogue = default;
+	DialogueDataSO _currentDialogue = default;
 
-	private void Start()
+	void Start()
 	{
 		if (_startDialogue != null)
 		{
 			_startDialogue.OnEventRaised += DisplayDialogueData;
 		}
-
 	}
 
 	/// <summary>
@@ -54,7 +62,7 @@ public class DialogueManager : MonoBehaviour
 	/// <summary>
 	/// Prepare DialogueManager when first time displaying DialogueData. 
 	/// <param name="dialogueDataSO"></param>
-	private void BeginDialogueData(DialogueDataSO dialogueDataSO)
+	void BeginDialogueData(DialogueDataSO dialogueDataSO)
 	{
 		_counter = 0;
 		_inputReader.EnableDialogueInput();
@@ -75,7 +83,7 @@ public class DialogueManager : MonoBehaviour
 		}
 	}
 
-	private void OnAdvance()
+	void OnAdvance()
 	{
 		_counter++;
 
@@ -96,7 +104,7 @@ public class DialogueManager : MonoBehaviour
 		}
 	}
 
-	private void DisplayChoices(List<Choice> choices)
+	void DisplayChoices(List<Choice> choices)
 	{
 		_inputReader.advanceDialogueEvent -= OnAdvance;
 		if (_makeDialogueChoiceEvent != null)
@@ -110,44 +118,59 @@ public class DialogueManager : MonoBehaviour
 		}
 	}
 
-	private void MakeDialogueChoice(Choice choice)
+	void MakeDialogueChoice(Choice choice)
 	{
-
 		if (_makeDialogueChoiceEvent != null)
 		{
 			_makeDialogueChoiceEvent.OnEventRaised -= MakeDialogueChoice;
 		}
+
 		if (choice.ActionType == ChoiceActionType.continueWithStep)
 		{
 			if (_continueWithStep != null)
+			{
 				_continueWithStep.RaiseEvent();
+			}
+
 			if (choice.NextDialogue != null)
+			{
 				DisplayDialogueData(choice.NextDialogue);
+			}
 		}
 		else
 		{
 			if (choice.NextDialogue != null)
+			{
 				DisplayDialogueData(choice.NextDialogue);
+			}
 			else
+			{
 				DialogueEndedAndCloseDialogueUI();
+			}
 		}
 	}
 
 	void DialogueEnded()
 	{
 		if (_endDialogue != null)
+		{
 			_endDialogue.RaiseEvent(_currentDialogue);
+		}
 	}
+
 	public void DialogueEndedAndCloseDialogueUI()
 	{
 		if (_endDialogue != null)
+		{
 			_endDialogue.RaiseEvent(_currentDialogue);
+		}
+
 		if (_closeDialogueUIEvent != null)
+		{
 			_closeDialogueUIEvent.RaiseEvent();
+		}
+
 		_inputReader.advanceDialogueEvent -= OnAdvance;
 		_inputReader.EnableGameplayInput();
-
-
 	}
 }
-

@@ -6,13 +6,15 @@ using UOP1.StateMachine.ScriptableObjects;
 [CreateAssetMenu(fileName = "IsEntityGettingHit", menuName = "State Machines/Conditions/Is Entity Getting Hit")]
 public class IsEntityGettingHitSO : StateConditionSO
 {
-	protected override Condition CreateCondition() => new IsEntityGettingHit();
+	protected override Condition CreateCondition()
+	{
+		return new IsEntityGettingHit();
+	}
 }
 
 public class IsEntityGettingHit : Condition
 {
-
-	private Damageable _damageableEntity;
+	Damageable _damageableEntity;
 
 	public override void Awake(StateMachine stateMachine)
 	{
@@ -26,6 +28,7 @@ public class IsEntityGettingHit : Condition
 		{
 			result = _damageableEntity.GetHit;
 		}
+
 		return result;
 	}
 }

@@ -19,20 +19,31 @@ public class AnimatorParameterActionSO : StateActionSO
 
 	public Moment whenToRun = default; // Allows this StateActionSO type to be reused for all 3 state moments
 
-	protected override StateAction CreateAction() => new AnimatorParameterAction(Animator.StringToHash(parameterName));
+	protected override StateAction CreateAction()
+	{
+		return new AnimatorParameterAction(Animator.StringToHash(parameterName));
+	}
 
 	public enum ParameterType
 	{
-		Bool, Int, Float, Trigger,
+		Bool, Int, Float, Trigger
 	}
 }
 
 public class AnimatorParameterAction : StateAction
 {
 	//Component references
-	private Animator _animator;
-	private AnimatorParameterActionSO _originSO => (AnimatorParameterActionSO)base.OriginSO; // The SO this StateAction spawned from
-	private int _parameterHash;
+	Animator _animator;
+
+	AnimatorParameterActionSO _originSO
+	{
+		get
+		{
+			return (AnimatorParameterActionSO)OriginSO; // The SO this StateAction spawned from
+		}
+	}
+
+	int _parameterHash;
 
 	public AnimatorParameterAction(int parameterHash)
 	{
@@ -47,16 +58,20 @@ public class AnimatorParameterAction : StateAction
 	public override void OnStateEnter()
 	{
 		if (_originSO.whenToRun == SpecificMoment.OnStateEnter)
+		{
 			SetParameter();
+		}
 	}
 
 	public override void OnStateExit()
 	{
 		if (_originSO.whenToRun == SpecificMoment.OnStateExit)
+		{
 			SetParameter();
+		}
 	}
 
-	private void SetParameter()
+	void SetParameter()
 	{
 		switch (_originSO.parameterType)
 		{

@@ -1,20 +1,21 @@
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
+
 #endif
 
 [ExecuteInEditMode]
 [AddComponentMenu("UOP1/Tools/Click to Place")]
 public class ClickToPlaceHelper : MonoBehaviour
 {
-	[Tooltip("Vertical offset above the clicked point. Useful to avoid spawn points to be directly ON the geometry which might cause issues.")]
-	[SerializeField] private float _verticalOffset = 0.1f;
+	[Tooltip("Vertical offset above the clicked point. Useful to avoid spawn points to be directly ON the geometry which might cause issues.")] [SerializeField]
+	float _verticalOffset = 0.1f;
 
-	private Vector3 _targetPosition;
+	Vector3 _targetPosition;
 
 	public bool IsTargeting { get; private set; }
 
-	private void OnDrawGizmos()
+	void OnDrawGizmos()
 	{
 		if (IsTargeting)
 		{

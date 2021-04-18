@@ -7,18 +7,17 @@ using UnityEngine.Localization.Components;
 
 public class InventoryItemFiller : MonoBehaviour
 {
-	[SerializeField] private Image _itemPreviewImage = default;
-	[SerializeField] private LocalizeStringEvent _itemTitle = default;
-	[SerializeField] private TextMeshProUGUI _itemCount = default;
-	[SerializeField] private Image _bgImage = default;
-	[SerializeField] private Image _imgHover = default;
-	[SerializeField] private Image _imgSelected = default;
+	[SerializeField] Image _itemPreviewImage = default;
+	[SerializeField] LocalizeStringEvent _itemTitle = default;
+	[SerializeField] TextMeshProUGUI _itemCount = default;
+	[SerializeField] Image _bgImage = default;
+	[SerializeField] Image _imgHover = default;
+	[SerializeField] Image _imgSelected = default;
 	[HideInInspector] public ItemStack _currentItem = default;
-	[SerializeField] private Button _itemButton = default;
+	[SerializeField] Button _itemButton = default;
 
 	public void SetItem(ItemStack itemStack, bool isSelected, ItemEventChannelSO selectItemEvent)
 	{
-
 		UnhoverItem();
 
 		_currentItem = itemStack;
@@ -37,7 +36,6 @@ public class InventoryItemFiller : MonoBehaviour
 			SelectItem();
 			UnhoverItem();
 			selectItemEvent.RaiseEvent(_currentItem.Item);
-
 		});
 	}
 
@@ -45,31 +43,21 @@ public class InventoryItemFiller : MonoBehaviour
 	public void HoverItem()
 	{
 		_imgHover.gameObject.SetActive(true);
-
-
 	}
+
 	public void UnhoverItem()
 	{
-
 		_imgHover.gameObject.SetActive(false);
-
 	}
 
 	public void SelectItem()
 
 	{
 		_imgSelected.gameObject.SetActive(true);
-
 	}
 
 	public void UnselectItem()
 	{
-
-
 		_imgSelected.gameObject.SetActive(false);
-
 	}
-
-
-
 }

@@ -8,9 +8,12 @@ using UnityEngine.Playables;
 public class PlayableDirectorChannelSO : ScriptableObject
 {
 	public UnityAction<PlayableDirector> OnEventRaised;
+
 	public void RaiseEvent(PlayableDirector playable)
 	{
 		if (OnEventRaised != null)
+		{
 			OnEventRaised.Invoke(playable);
+		}
 	}
 }

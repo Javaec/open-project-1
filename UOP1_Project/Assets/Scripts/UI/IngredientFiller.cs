@@ -6,22 +6,16 @@ using TMPro;
 
 public class IngredientFiller : MonoBehaviour
 {
+	[SerializeField] TextMeshProUGUI _ingredientAmount = default;
 
-	[SerializeField]
-	private TextMeshProUGUI _ingredientAmount = default;
+	[SerializeField] LocalizeStringEvent _ingredientName = default;
 
-	[SerializeField]
-	private LocalizeStringEvent _ingredientName = default;
-
-	[SerializeField]
-	private GameObject _checkMark = default;
+	[SerializeField] GameObject _checkMark = default;
 
 	public void FillIngredient(ItemStack ingredient, bool isAvailable)
 	{
-
 		_ingredientAmount.text = ingredient.Amount.ToString();
 		_ingredientName.StringReference = ingredient.Item.Name;
 		_checkMark.SetActive(isAvailable);
-
 	}
 }

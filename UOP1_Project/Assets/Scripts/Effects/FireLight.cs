@@ -7,10 +7,10 @@ public class FireLight : MonoBehaviour
 	public AnimationCurve lightCurve;
 	public float fireSpeed = 1f;
 
-	private Light _lightComp;
-	private float _initialIntensity;
+	Light _lightComp;
+	float _initialIntensity;
 
-	private void Awake()
+	void Awake()
 	{
 		_lightComp = GetComponent<Light>();
 		_initialIntensity = _lightComp.intensity;

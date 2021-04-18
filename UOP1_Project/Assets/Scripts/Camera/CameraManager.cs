@@ -8,18 +8,18 @@ public class CameraManager : MonoBehaviour
 	public InputReader inputReader;
 	public Camera mainCamera;
 	public CinemachineFreeLook freeLookVCam;
-	private bool _isRMBPressed;
+	bool _isRMBPressed;
 
-	[SerializeField, Range(.5f, 3f)]
-	private float _speedMultiplier = 1f; //TODO: make this modifiable in the game settings											
-	[SerializeField] private TransformAnchor _cameraTransformAnchor = default;
+	[SerializeField] [Range(.5f, 3f)] float _speedMultiplier = 1f; //TODO: make this modifiable in the game settings											
+	[SerializeField] TransformAnchor _cameraTransformAnchor = default;
 
 	[Header("Listening on channels")]
 	[Tooltip("The CameraManager listens to this event, fired by objects in any scene, to adapt camera position")]
-	[SerializeField] private TransformEventChannelSO _frameObjectChannel = default;
+	[SerializeField]
+	TransformEventChannelSO _frameObjectChannel = default;
 
 
-	private bool _cameraMovementLock = false;
+	bool _cameraMovementLock = false;
 
 	public void SetupProtagonistVirtualCamera(Transform target)
 	{
@@ -28,29 +28,33 @@ public class CameraManager : MonoBehaviour
 		freeLookVCam.OnTargetObjectWarped(target, target.position - freeLookVCam.transform.position - Vector3.forward);
 	}
 
-	private void OnEnable()
+	void OnEnable()
 	{
 		inputReader.cameraMoveEvent += OnCameraMove;
 		inputReader.enableMouseControlCameraEvent += OnEnableMouseControlCamera;
 		inputReader.disableMouseControlCameraEvent += OnDisableMouseControlCamera;
 
 		if (_frameObjectChannel != null)
+		{
 			_frameObjectChannel.OnEventRaised += OnFrameObjectEvent;
+		}
 
 		_cameraTransformAnchor.Transform = mainCamera.transform;
 	}
 
-	private void OnDisable()
+	void OnDisable()
 	{
 		inputReader.cameraMoveEvent -= OnCameraMove;
 		inputReader.enableMouseControlCameraEvent -= OnEnableMouseControlCamera;
 		inputReader.disableMouseControlCameraEvent -= OnDisableMouseControlCamera;
 
 		if (_frameObjectChannel != null)
+		{
 			_frameObjectChannel.OnEventRaised -= OnFrameObjectEvent;
+		}
 	}
 
-	private void OnEnableMouseControlCamera()
+	void OnEnableMouseControlCamera()
 	{
 		_isRMBPressed = true;
 
@@ -67,7 +71,7 @@ public class CameraManager : MonoBehaviour
 		_cameraMovementLock = false;
 	}
 
-	private void OnDisableMouseControlCamera()
+	void OnDisableMouseControlCamera()
 	{
 		_isRMBPressed = false;
 
@@ -80,19 +84,23 @@ public class CameraManager : MonoBehaviour
 		freeLookVCam.m_YAxis.m_InputAxisValue = 0;
 	}
 
-	private void OnCameraMove(Vector2 cameraMovement, bool isDeviceMouse)
+	void OnCameraMove(Vector2 cameraMovement, bool isDeviceMouse)
 	{
 		if (_cameraMovementLock)
+		{
 			return;
+		}
 
 		if (isDeviceMouse && !_isRMBPressed)
+		{
 			return;
+		}
 
 		freeLookVCam.m_XAxis.m_InputAxisValue = cameraMovement.x * Time.deltaTime * _speedMultiplier;
 		freeLookVCam.m_YAxis.m_InputAxisValue = cameraMovement.y * Time.deltaTime * _speedMultiplier;
 	}
 
-	private void OnFrameObjectEvent(Transform value)
+	void OnFrameObjectEvent(Transform value)
 	{
 		SetupProtagonistVirtualCamera(value);
 	}

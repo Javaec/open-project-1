@@ -7,14 +7,17 @@ using UOP1.StateMachine.ScriptableObjects;
 [CreateAssetMenu(fileName = "HasReachedRoamingDestination", menuName = "State Machines/Conditions/Has Reached Roaming Destination")]
 public class HasReachedRoamingDestinationSO : StateConditionSO
 {
-	protected override Condition CreateCondition() => new HasReachedRoamingDestination();
+	protected override Condition CreateCondition()
+	{
+		return new HasReachedRoamingDestination();
+	}
 }
 
 public class HasReachedRoamingDestination : Condition
 {
-	private NavMeshAgent _agent;
-	private float _startTime;
-	private bool _agentDefined;
+	NavMeshAgent _agent;
+	float _startTime;
+	bool _agentDefined;
 
 	public override void Awake(StateMachine stateMachine)
 	{

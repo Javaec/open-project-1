@@ -6,8 +6,8 @@ namespace UOP1.StateMachine.Editor
 	[CustomPropertyDrawer(typeof(InitOnlyAttribute))]
 	public class InitOnlyAttributeDrawer : PropertyDrawer
 	{
-		private static readonly string _text = "Changes to this parameter during Play mode won't be reflected on existing StateMachines";
-		private static readonly GUIStyle _style = new GUIStyle(GUI.skin.GetStyle("helpbox")) { padding = new RectOffset(5, 5, 5, 5) };
+		static readonly string _text = "Changes to this parameter during Play mode won't be reflected on existing StateMachines";
+		static readonly GUIStyle _style = new GUIStyle(GUI.skin.GetStyle("helpbox")) {padding = new RectOffset(5, 5, 5, 5)};
 
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
@@ -29,7 +29,7 @@ namespace UOP1.StateMachine.Editor
 			if (EditorApplication.isPlaying)
 			{
 				height += _style.CalcHeight(new GUIContent(_text), EditorGUIUtility.currentViewWidth)
-					+ EditorGUIUtility.standardVerticalSpacing * 4;
+				          + EditorGUIUtility.standardVerticalSpacing * 4;
 			}
 
 			return height;

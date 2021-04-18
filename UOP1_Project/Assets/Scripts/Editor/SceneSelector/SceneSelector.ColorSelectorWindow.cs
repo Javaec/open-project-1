@@ -4,56 +4,56 @@ using SceneSelectorInternal;
 
 public partial class SceneSelector : EditorWindow
 {
-	private class ColorSelectorWindow : EditorWindow
+	class ColorSelectorWindow : EditorWindow
 	{
-		private static readonly float kCellSize = PreferencesWindow.kColorMarkerFieldSize * 2.0f;
-		private static readonly Color kCellBackColor = new Color(0.0f, 0.0f, 0.0f, 0.1f);
-		private static readonly Vector2 kCellOffset = new Vector2(1.0f, 1.0f);
-		private static readonly Vector2Int kCount = new Vector2Int(5, 5);
+		static readonly float kCellSize = PreferencesWindow.kColorMarkerFieldSize * 2.0f;
+		static readonly Color kCellBackColor = new Color(0.0f, 0.0f, 0.0f, 0.1f);
+		static readonly Vector2 kCellOffset = new Vector2(1.0f, 1.0f);
+		static readonly Vector2Int kCount = new Vector2Int(5, 5);
 
-		private PreferencesWindow _owner;
-		private Color[,] _colors;
-		private Item _item;
+		PreferencesWindow _owner;
+		Color[,] _colors;
+		Item _item;
 
 		public static ColorSelectorWindow Open(Rect rect, PreferencesWindow owner, Item item)
 		{
-			var window = CreateInstance<ColorSelectorWindow>();
+			ColorSelectorWindow window = CreateInstance<ColorSelectorWindow>();
 			window.Init(rect, owner, item);
 			return window;
 		}
 
-		private void Init(Rect rect, PreferencesWindow owner, Item item)
+		void Init(Rect rect, PreferencesWindow owner, Item item)
 		{
-			var size = (Vector2)kCount * kCellSize;
+			Vector2 size = (Vector2)kCount * kCellSize;
 			ShowAsDropDown(rect, size);
 			_owner = owner;
 			_item = item;
 		}
 
-		private void OnEnable()
+		void OnEnable()
 		{
 			wantsMouseMove = true;
 			InitColors();
 		}
 
-		private void OnGUI()
+		void OnGUI()
 		{
 			Helper.RepaintOnMouseMove(this);
 			DrawMarkers();
 		}
 
-		private void DrawMarkers()
+		void DrawMarkers()
 		{
-			var size = new Vector2(kCellSize, kCellSize);
+			Vector2 size = new Vector2(kCellSize, kCellSize);
 			for (int x = 0; x < kCount.x; ++x)
 			{
 				for (int y = 0; y < kCount.y; ++y)
 				{
-					var color = _colors[x, y];
-					var position = size * new Vector2(x, y);
-					var rect = new Rect(position, size);
+					Color color = _colors[x, y];
+					Vector2 position = size * new Vector2(x, y);
+					Rect rect = new Rect(position, size);
 					{
-						var cellBackRect = rect;
+						Rect cellBackRect = rect;
 						cellBackRect.position += kCellOffset;
 						cellBackRect.size -= kCellOffset * 2.0f;
 						EditorGUI.DrawRect(cellBackRect, kCellBackColor);
@@ -68,13 +68,13 @@ public partial class SceneSelector : EditorWindow
 			}
 		}
 
-		private void InitColors()
+		void InitColors()
 		{
-			var count = kCount.x * kCount.y;
+			int count = kCount.x * kCount.y;
 			_colors = new Color[kCount.x, kCount.y];
 			for (int x = 0; x < kCount.x; ++x)
 			{
-				var h = x * kCount.y;
+				int h = x * kCount.y;
 				for (int y = 0; y < kCount.y; ++y)
 				{
 					float hue = (float)(h + y) / count;

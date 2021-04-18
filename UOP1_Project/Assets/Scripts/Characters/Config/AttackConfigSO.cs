@@ -5,12 +5,25 @@ using UnityEngine.Localization;
 [CreateAssetMenu(fileName = "AttackConfig", menuName = "EntityConfig/Attack Config")]
 public class AttackConfigSO : ScriptableObject
 {
-	[Tooltip("Character attack strength")]
-	[SerializeField] private int _attackStrength;
+	[Tooltip("Character attack strength")] [SerializeField]
+	int _attackStrength;
 
-	[Tooltip("Character attack reload duration (in second).")]
-	[SerializeField] private float _attackReloadDuration;
+	[Tooltip("Character attack reload duration (in second).")] [SerializeField]
+	float _attackReloadDuration;
 
-	public int AttackStrength => _attackStrength;
-	public float AttackReloadDuration => _attackReloadDuration;
+	public int AttackStrength
+	{
+		get
+		{
+			return _attackStrength;
+		}
+	}
+
+	public float AttackReloadDuration
+	{
+		get
+		{
+			return _attackReloadDuration;
+		}
+	}
 }

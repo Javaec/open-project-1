@@ -5,12 +5,10 @@ using UnityEditor;
 
 class SOsQuickAccessToolWindow : EditorWindow
 {
-	[Header("Editor Window Related")]
-	Vector2 scroll;
+	[Header("Editor Window Related")] Vector2 scroll;
 	int selected;
 
-	[Header("SOs related")]
-	string[] assetSearchFolders;
+	[Header("SOs related")] string[] assetSearchFolders;
 
 	List<string> SOTypes;
 	string[] objectsGUIDs;
@@ -21,7 +19,7 @@ class SOsQuickAccessToolWindow : EditorWindow
 	List<string> displayObjectsPaths;
 	List<ScriptableObject> displayObjects;
 
-	private void OnEnable()
+	void OnEnable()
 	{
 		assetSearchFolders = new string[1];
 		assetSearchFolders[0] = "Assets/ScriptableObjects";
@@ -37,7 +35,7 @@ class SOsQuickAccessToolWindow : EditorWindow
 	}
 
 	[MenuItem("Tools/SOs Quick Access Tool")]
-	private static void ShowWindow()
+	static void ShowWindow()
 	{
 		GetWindow<SOsQuickAccessToolWindow>("SOs Quick Access Tool");
 	}
@@ -121,6 +119,7 @@ class SOsQuickAccessToolWindow : EditorWindow
 		{
 			displayObjects.Clear();
 		}
+
 		if (displayObjectsPaths != null)
 		{
 			displayObjectsPaths.Clear();

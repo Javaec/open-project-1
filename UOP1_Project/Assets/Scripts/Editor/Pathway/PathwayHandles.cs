@@ -4,8 +4,8 @@ using UnityEditor;
 
 public class PathwayHandles
 {
-	private PathwayConfigSO _pathway;
-	private Vector3 _tmp;
+	PathwayConfigSO _pathway;
+	Vector3 _tmp;
 
 	public PathwayHandles(PathwayConfigSO pathway)
 	{
@@ -26,6 +26,7 @@ public class PathwayHandles
 				return i;
 			}
 		}
+
 		return -1;
 	}
 }

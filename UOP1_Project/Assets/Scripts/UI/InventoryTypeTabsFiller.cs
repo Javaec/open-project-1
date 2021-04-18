@@ -5,19 +5,19 @@ using UnityEngine.UI;
 
 public class InventoryTypeTabsFiller : MonoBehaviour
 {
-
-
-	[SerializeField]
-	private List<InventoryTypeTabFiller> instantiatedGameObjects;
+	[SerializeField] List<InventoryTypeTabFiller> instantiatedGameObjects;
 
 	public void FillTabs(List<InventoryTabType> typesList, InventoryTabType selectedType, TabEventChannelSO changeTabEvent)
 	{
-
 		if (instantiatedGameObjects == null)
+		{
 			instantiatedGameObjects = new List<InventoryTypeTabFiller>();
+		}
 
 		if (gameObject.GetComponent<VerticalLayoutGroup>() != null)
+		{
 			gameObject.GetComponent<VerticalLayoutGroup>().enabled = true;
+		}
 
 
 		int maxCount = Mathf.Max(typesList.Count, instantiatedGameObjects.Count);
@@ -30,30 +30,29 @@ public class InventoryTypeTabsFiller : MonoBehaviour
 				{
 					Debug.Log("Maximum tabs reached");
 				}
+
 				bool isSelected = typesList[i] == selectedType;
 				//fill
 				instantiatedGameObjects[i].fillTab(typesList[i], isSelected, changeTabEvent);
 				instantiatedGameObjects[i].gameObject.SetActive(true);
-
 			}
 			else if (i < instantiatedGameObjects.Count)
 			{
 				//Desactive
 				instantiatedGameObjects[i].gameObject.SetActive(false);
 			}
-
 		}
-		StartCoroutine(waitBeforeDesactiveLayout());
 
+		StartCoroutine(waitBeforeDesactiveLayout());
 	}
+
 	IEnumerator waitBeforeDesactiveLayout()
 	{
-
-
 		yield return new WaitForSeconds(1);
 		//disable layout group after layout calculation
 		if (gameObject.GetComponent<VerticalLayoutGroup>() != null)
+		{
 			gameObject.GetComponent<VerticalLayoutGroup>().enabled = false;
+		}
 	}
-
 }

@@ -36,9 +36,9 @@ public class InputReader : ScriptableObject, GameInput.IGameplayActions, GameInp
 	public event UnityAction menuUnpauseEvent = delegate { };
 
 
-	private GameInput gameInput;
+	GameInput gameInput;
 
-	private void OnEnable()
+	void OnEnable()
 	{
 		if (gameInput == null)
 		{
@@ -51,7 +51,7 @@ public class InputReader : ScriptableObject, GameInput.IGameplayActions, GameInp
 		EnableGameplayInput();
 	}
 
-	private void OnDisable()
+	void OnDisable()
 	{
 		DisableAllInput();
 	}
@@ -72,22 +72,30 @@ public class InputReader : ScriptableObject, GameInput.IGameplayActions, GameInp
 	public void OnOpenInventory(InputAction.CallbackContext context)
 	{
 		if (context.phase == InputActionPhase.Performed)
+		{
 			openInventoryEvent.Invoke();
+		}
 	}
 
 	public void OnInteract(InputAction.CallbackContext context)
 	{
 		if (context.phase == InputActionPhase.Performed)
+		{
 			interactEvent.Invoke();
+		}
 	}
 
 	public void OnJump(InputAction.CallbackContext context)
 	{
 		if (context.phase == InputActionPhase.Performed)
+		{
 			jumpEvent.Invoke();
+		}
 
 		if (context.phase == InputActionPhase.Canceled)
+		{
 			jumpCanceledEvent.Invoke();
+		}
 	}
 
 	public void OnMove(InputAction.CallbackContext context)
@@ -111,7 +119,9 @@ public class InputReader : ScriptableObject, GameInput.IGameplayActions, GameInp
 	public void OnPause(InputAction.CallbackContext context)
 	{
 		if (context.phase == InputActionPhase.Performed)
+		{
 			pauseEvent.Invoke();
+		}
 	}
 
 	public void OnRotateCamera(InputAction.CallbackContext context)
@@ -122,48 +132,67 @@ public class InputReader : ScriptableObject, GameInput.IGameplayActions, GameInp
 	public void OnMouseControlCamera(InputAction.CallbackContext context)
 	{
 		if (context.phase == InputActionPhase.Performed)
+		{
 			enableMouseControlCameraEvent.Invoke();
+		}
 
 		if (context.phase == InputActionPhase.Canceled)
+		{
 			disableMouseControlCameraEvent.Invoke();
+		}
 	}
 
-	private bool IsDeviceMouse(InputAction.CallbackContext context) => context.control.device.name == "Mouse";
+	bool IsDeviceMouse(InputAction.CallbackContext context)
+	{
+		return context.control.device.name == "Mouse";
+	}
 
 	public void OnMoveSelection(InputAction.CallbackContext context)
 	{
 		if (context.phase == InputActionPhase.Performed)
+		{
 			moveSelectionEvent();
+		}
 	}
 
 	public void OnAdvanceDialogue(InputAction.CallbackContext context)
 	{
 		if (context.phase == InputActionPhase.Performed)
+		{
 			advanceDialogueEvent();
+		}
 	}
 
 	public void OnConfirm(InputAction.CallbackContext context)
 	{
 		if (context.phase == InputActionPhase.Performed)
+		{
 			menuConfirmEvent();
+		}
 	}
 
 	public void OnCancel(InputAction.CallbackContext context)
 	{
 		if (context.phase == InputActionPhase.Performed)
+		{
 			menuCancelEvent();
+		}
 	}
 
 	public void OnMouseMove(InputAction.CallbackContext context)
 	{
 		if (context.phase == InputActionPhase.Performed)
+		{
 			menuMouseMoveEvent();
+		}
 	}
 
 	public void OnUnpause(InputAction.CallbackContext context)
 	{
 		if (context.phase == InputActionPhase.Performed)
+		{
 			menuUnpauseEvent();
+		}
 	}
 
 	public void EnableDialogueInput()
@@ -197,5 +226,8 @@ public class InputReader : ScriptableObject, GameInput.IGameplayActions, GameInp
 		gameInput.Dialogues.Disable();
 	}
 
-	public bool LeftMouseDown() => Mouse.current.leftButton.isPressed;
+	public bool LeftMouseDown()
+	{
+		return Mouse.current.leftButton.isPressed;
+	}
 }

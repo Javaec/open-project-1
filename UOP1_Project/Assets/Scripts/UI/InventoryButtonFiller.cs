@@ -6,30 +6,15 @@ using UnityEngine.Localization.Components;
 
 public class InventoryButtonFiller : MonoBehaviour
 {
+	[SerializeField] LocalizeStringEvent _buttonActionText = default;
 
-	[SerializeField]
-	private LocalizeStringEvent _buttonActionText = default;
-
-	[SerializeField]
-	private Button _buttonAction = default;
+	[SerializeField] Button _buttonAction = default;
 
 
 	public void FillInventoryButtons(ItemType itemType, bool isInteractable = true)
 	{
-
-
-
 		_buttonAction.interactable = isInteractable;
 
 		_buttonActionText.StringReference = itemType.ActionName;
-
-
-
-
-
-
 	}
-
-
-
 }

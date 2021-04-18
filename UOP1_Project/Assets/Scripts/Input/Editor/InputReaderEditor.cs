@@ -9,7 +9,9 @@ public class InputReaderEditor : Editor
 		DrawDefaultInspector();
 
 		if (!Application.isPlaying)
+		{
 			return;
+		}
 
 		ScriptableObjectHelper.GenerateButtonsForEvents<InputReader>(target);
 	}

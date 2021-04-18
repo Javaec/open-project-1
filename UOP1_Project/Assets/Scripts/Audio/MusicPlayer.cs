@@ -5,24 +5,23 @@ using UnityEngine;
 
 public class MusicPlayer : MonoBehaviour
 {
-	[SerializeField] private VoidEventChannelSO _onSceneReady = default;
-	[SerializeField] private AudioCueEventChannelSO _playMusicOn = default;
-	[SerializeField] private GameSceneSO _thisSceneSO = default;
-	[SerializeField] private AudioConfigurationSO _audioConfig = default;
+	[SerializeField] VoidEventChannelSO _onSceneReady = default;
+	[SerializeField] AudioCueEventChannelSO _playMusicOn = default;
+	[SerializeField] GameSceneSO _thisSceneSO = default;
+	[SerializeField] AudioConfigurationSO _audioConfig = default;
 
-	private void OnEnable()
+	void OnEnable()
 	{
 		_onSceneReady.OnEventRaised += PlayMusic;
 	}
 
-	private void OnDisable()
+	void OnDisable()
 	{
 		_onSceneReady.OnEventRaised -= PlayMusic;
 	}
 
-	private void PlayMusic()
+	void PlayMusic()
 	{
 		_playMusicOn.RaisePlayEvent(_thisSceneSO.musicTrack, _audioConfig);
-
 	}
 }

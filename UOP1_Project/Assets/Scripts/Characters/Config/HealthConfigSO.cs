@@ -4,9 +4,14 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "HealthConfig", menuName = "EntityConfig/Health Config")]
 public class HealthConfigSO : ScriptableObject
 {
-	[Tooltip("Initial critter health")]
-	[SerializeField] private int _maxHealth;
+	[Tooltip("Initial critter health")] [SerializeField]
+	int _maxHealth;
 
-	public int MaxHealth => _maxHealth;
-
+	public int MaxHealth
+	{
+		get
+		{
+			return _maxHealth;
+		}
+	}
 }

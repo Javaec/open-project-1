@@ -6,25 +6,25 @@ using UnityEngine.UIElements;
 
 namespace UOP1.EditorTools.Replacer
 {
-	internal class ReplaceContextMenu
+	class ReplaceContextMenu
 	{
-		private static Type hierarchyType;
+		static Type hierarchyType;
 
-		private static EditorWindow focusedWindow;
-		private static IMGUIContainer hierarchyGUI;
+		static EditorWindow focusedWindow;
+		static IMGUIContainer hierarchyGUI;
 
-		private static Vector2 mousePosition;
-		private static bool hasExecuted;
+		static Vector2 mousePosition;
+		static bool hasExecuted;
 
 		[InitializeOnLoadMethod]
-		private static void OnInitialize()
+		static void OnInitialize()
 		{
 			hierarchyType = typeof(Editor).Assembly.GetType("UnityEditor.SceneHierarchyWindow");
 
 			EditorApplication.update += TrackFocusedHierarchy;
 		}
 
-		private static void TrackFocusedHierarchy()
+		static void TrackFocusedHierarchy()
 		{
 			if (focusedWindow != EditorWindow.focusedWindow)
 			{
@@ -33,7 +33,9 @@ namespace UOP1.EditorTools.Replacer
 				if (focusedWindow?.GetType() == hierarchyType)
 				{
 					if (hierarchyGUI != null)
+					{
 						hierarchyGUI.onGUIHandler -= OnFocusedHierarchyGUI;
+					}
 
 					hierarchyGUI = focusedWindow.rootVisualElement.parent.Query<IMGUIContainer>();
 					hierarchyGUI.onGUIHandler += OnFocusedHierarchyGUI;
@@ -41,25 +43,27 @@ namespace UOP1.EditorTools.Replacer
 			}
 		}
 
-		private static void OnFocusedHierarchyGUI()
+		static void OnFocusedHierarchyGUI()
 		{
 			// As Event.current is null during context-menu callback, we need to track mouse position on hierarchy GUI
 			mousePosition = GUIUtility.GUIToScreenPoint(Event.current.mousePosition);
 		}
 
 		[MenuItem("GameObject/Replace", true, priority = 0)]
-		private static bool ReplaceSelectionValidate()
+		static bool ReplaceSelectionValidate()
 		{
 			return Selection.gameObjects.Length > 0;
 		}
 
 		[MenuItem("GameObject/Replace", priority = 0)]
-		private static void ReplaceSelection()
+		static void ReplaceSelection()
 		{
 			if (hasExecuted)
+			{
 				return;
+			}
 
-			var rect = new Rect(mousePosition, new Vector2(240, 360));
+			Rect rect = new Rect(mousePosition, new Vector2(240, 360));
 
 			ReplacePrefabSearchPopup.Show(rect);
 

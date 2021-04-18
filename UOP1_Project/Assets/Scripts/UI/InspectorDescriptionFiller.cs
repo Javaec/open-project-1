@@ -1,15 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 using UnityEngine.Localization.Components;
 
 
 public class InspectorDescriptionFiller : MonoBehaviour
 {
-	[SerializeField] private LocalizeStringEvent _textDescription = default;
+	[SerializeField] LocalizeStringEvent _textDescription = default;
 
-	[SerializeField] private LocalizeStringEvent _textName = default;
+	[SerializeField] LocalizeStringEvent _textName = default;
 
 	public void FillDescription(Item itemToInspect)
 	{
@@ -19,7 +18,5 @@ public class InspectorDescriptionFiller : MonoBehaviour
 
 		_textName.StringReference = itemToInspect.Name;
 		_textDescription.StringReference = itemToInspect.Description;
-
 	}
-
 }

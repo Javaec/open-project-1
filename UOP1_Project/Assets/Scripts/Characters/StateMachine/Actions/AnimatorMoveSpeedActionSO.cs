@@ -12,17 +12,27 @@ public class AnimatorMoveSpeedActionSO : StateActionSO
 {
 	public string parameterName = default;
 
-	protected override StateAction CreateAction() => new AnimatorMoveSpeedAction(Animator.StringToHash(parameterName));
+	protected override StateAction CreateAction()
+	{
+		return new AnimatorMoveSpeedAction(Animator.StringToHash(parameterName));
+	}
 }
 
 public class AnimatorMoveSpeedAction : StateAction
 {
 	//Component references
-	private Animator _animator;
-	private Protagonist _protagonist;
+	Animator _animator;
+	Protagonist _protagonist;
 
-	private AnimatorParameterActionSO _originSO => (AnimatorParameterActionSO)base.OriginSO; // The SO this StateAction spawned from
-	private int _parameterHash;
+	AnimatorParameterActionSO _originSO
+	{
+		get
+		{
+			return (AnimatorParameterActionSO)OriginSO; // The SO this StateAction spawned from
+		}
+	}
+
+	int _parameterHash;
 
 	public AnimatorMoveSpeedAction(int parameterHash)
 	{

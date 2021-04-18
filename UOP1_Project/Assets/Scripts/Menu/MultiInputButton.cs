@@ -8,9 +8,9 @@ using UnityEngine.UI;
 [AddComponentMenu("UOP1/UI/MultiInputButton")]
 public class MultiInputButton : Button
 {
-	private MenuSelectionHandler _menuSelectionHandler;
+	MenuSelectionHandler _menuSelectionHandler;
 
-	private new void Awake()
+	new void Awake()
 	{
 		_menuSelectionHandler = transform.root.gameObject.GetComponentInChildren<MenuSelectionHandler>();
 	}
@@ -34,6 +34,8 @@ public class MultiInputButton : Button
 	public override void OnSubmit(BaseEventData eventData)
 	{
 		if (_menuSelectionHandler.AllowsSubmit())
+		{
 			base.OnSubmit(eventData);
+		}
 	}
 }

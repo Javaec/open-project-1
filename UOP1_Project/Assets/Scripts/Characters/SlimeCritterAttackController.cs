@@ -5,19 +5,16 @@ using UnityEngine;
 public class SlimeCritterAttackController : MonoBehaviour
 {
 	// Reference of the player transform to compute the propel target position
-	[SerializeField]
-	private TransformAnchor _playerTransform;
+	[SerializeField] TransformAnchor _playerTransform;
 
 	// Propel factor is the proportion of the distance between the critter and the player crossed by the critter during the propel animation
-	[SerializeField]
-	private float _propelFactor = 1.0f;
+	[SerializeField] float _propelFactor = 1.0f;
 
 	// Duration of the propel section of the animation.
-	[SerializeField]
-	private float _propelDuration = 0.2f;
+	[SerializeField] float _propelDuration = 0.2f;
 
-	private float _innerTime = 0.0f;
-	private Vector3 _propelTargetVector = default;
+	float _innerTime = 0.0f;
+	Vector3 _propelTargetVector = default;
 
 	// When the attack starts, the position targeted by the attack is determined and is not changed afterward
 	public void SetAttackTarget()

@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class PoolTester : MonoBehaviour
 {
-	[SerializeField]
-	private ParticlePoolSO _pool = default;
+	[SerializeField] ParticlePoolSO _pool = default;
 
-	private void Start()
+	void Start()
 	{
 		List<ParticleSystem> particles = _pool.Request(10) as List<ParticleSystem>;
 		foreach (ParticleSystem particle in particles)
@@ -16,7 +15,7 @@ public class PoolTester : MonoBehaviour
 		}
 	}
 
-	private IEnumerator DoParticleBehaviour(ParticleSystem particle)
+	IEnumerator DoParticleBehaviour(ParticleSystem particle)
 	{
 		particle.transform.position = Random.insideUnitSphere * 5f;
 		particle.Play();

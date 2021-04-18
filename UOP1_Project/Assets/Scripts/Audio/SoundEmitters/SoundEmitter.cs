@@ -7,13 +7,13 @@ using UnityEngine.Events;
 [RequireComponent(typeof(AudioSource))]
 public class SoundEmitter : MonoBehaviour
 {
-	private AudioSource _audioSource;
+	AudioSource _audioSource;
 
 	public event UnityAction<SoundEmitter> OnSoundFinishedPlaying;
 
-	private void Awake()
+	void Awake()
 	{
-		_audioSource = this.GetComponent<AudioSource>();
+		_audioSource = GetComponent<AudioSource>();
 		_audioSource.playOnAwake = false;
 	}
 
@@ -47,7 +47,9 @@ public class SoundEmitter : MonoBehaviour
 		//Start the clip at the same time the previous one left, if length allows
 		//TODO: find a better way to sync fading songs
 		if (startTime <= _audioSource.clip.length)
+		{
 			_audioSource.time = startTime;
+		}
 
 		_audioSource.DOFade(1f, duration);
 	}
@@ -59,7 +61,7 @@ public class SoundEmitter : MonoBehaviour
 		return _audioSource.time;
 	}
 
-	private void OnFadeOutComplete()
+	void OnFadeOutComplete()
 	{
 		NotifyBeingDone();
 	}
@@ -121,7 +123,7 @@ public class SoundEmitter : MonoBehaviour
 		NotifyBeingDone();
 	}
 
-	private void NotifyBeingDone()
+	void NotifyBeingDone()
 	{
 		OnSoundFinishedPlaying.Invoke(this); // The AudioManager will pick this up
 	}

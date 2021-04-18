@@ -7,9 +7,12 @@ using UnityEngine.Events;
 public class StepChannelSO : ScriptableObject
 {
 	public UnityAction<StepSO> OnEventRaised;
+
 	public void RaiseEvent(StepSO step)
 	{
 		if (OnEventRaised != null)
+		{
 			OnEventRaised.Invoke(step);
+		}
 	}
 }

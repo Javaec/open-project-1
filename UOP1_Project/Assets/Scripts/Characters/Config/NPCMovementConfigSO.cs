@@ -4,12 +4,25 @@ using UnityEngine.Localization;
 
 public class NPCMovementConfigSO : ScriptableObject
 {
-	[Tooltip("Waypoint stop duration")]
-	[SerializeField] private float _stopDuration;
+	[Tooltip("Waypoint stop duration")] [SerializeField]
+	float _stopDuration;
 
-	[Tooltip("Roaming speed")]
-	[SerializeField] private float _speed;
+	[Tooltip("Roaming speed")] [SerializeField]
+	float _speed;
 
-	public float Speed => _speed;
-	public float StopDuration => _stopDuration;
+	public float Speed
+	{
+		get
+		{
+			return _speed;
+		}
+	}
+
+	public float StopDuration
+	{
+		get
+		{
+			return _stopDuration;
+		}
+	}
 }

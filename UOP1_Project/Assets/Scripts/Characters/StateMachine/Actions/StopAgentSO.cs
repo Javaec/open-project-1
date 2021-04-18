@@ -6,13 +6,16 @@ using UOP1.StateMachine.ScriptableObjects;
 [CreateAssetMenu(fileName = "StopAgent", menuName = "State Machines/Actions/Stop NavMesh Agent")]
 public class StopAgentSO : StateActionSO
 {
-	protected override StateAction CreateAction() => new StopAgent();
+	protected override StateAction CreateAction()
+	{
+		return new StopAgent();
+	}
 }
 
 public class StopAgent : StateAction
 {
-	private NavMeshAgent _agent;
-	private bool _agentDefined;
+	NavMeshAgent _agent;
+	bool _agentDefined;
 
 	public override void Awake(StateMachine stateMachine)
 	{
@@ -22,7 +25,6 @@ public class StopAgent : StateAction
 
 	public override void OnUpdate()
 	{
-
 	}
 
 	public override void OnStateEnter()

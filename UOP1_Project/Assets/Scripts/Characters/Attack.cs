@@ -4,16 +4,22 @@ using UnityEngine;
 
 public class Attack : MonoBehaviour
 {
-	[SerializeField] private AttackConfigSO _attackConfigSO;
+	[SerializeField] AttackConfigSO _attackConfigSO;
 
-	public AttackConfigSO AttackConfig => _attackConfigSO;
+	public AttackConfigSO AttackConfig
+	{
+		get
+		{
+			return _attackConfigSO;
+		}
+	}
 
-	private void Awake()
+	void Awake()
 	{
 		gameObject.SetActive(false);
 	}
 
-	private void OnTriggerEnter(Collider other)
+	void OnTriggerEnter(Collider other)
 	{
 		// Avoid friendly fire!
 		if (!other.CompareTag(gameObject.tag))
@@ -21,7 +27,9 @@ public class Attack : MonoBehaviour
 			if (other.TryGetComponent(out Damageable damageableComp))
 			{
 				if (!damageableComp.GetHit)
+				{
 					damageableComp.ReceiveAnAttack(_attackConfigSO.AttackStrength);
+				}
 			}
 		}
 	}

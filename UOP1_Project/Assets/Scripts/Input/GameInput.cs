@@ -9,6 +9,7 @@ using UnityEngine.InputSystem.Utilities;
 public class @GameInput : IInputActionCollection, IDisposable
 {
 	public InputActionAsset asset { get; }
+
 	public @GameInput()
 	{
 		asset = InputActionAsset.FromJson(@"{
@@ -1171,27 +1172,27 @@ public class @GameInput : IInputActionCollection, IDisposable
     ]
 }");
 		// Gameplay
-		m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
-		m_Gameplay_Move = m_Gameplay.FindAction("Move", throwIfNotFound: true);
-		m_Gameplay_Jump = m_Gameplay.FindAction("Jump", throwIfNotFound: true);
-		m_Gameplay_Attack = m_Gameplay.FindAction("Attack", throwIfNotFound: true);
-		m_Gameplay_Interact = m_Gameplay.FindAction("Interact", throwIfNotFound: true);
-		m_Gameplay_Pause = m_Gameplay.FindAction("Pause", throwIfNotFound: true);
-		m_Gameplay_OpenInventory = m_Gameplay.FindAction("OpenInventory", throwIfNotFound: true);
-		m_Gameplay_RotateCamera = m_Gameplay.FindAction("RotateCamera", throwIfNotFound: true);
-		m_Gameplay_MouseControlCamera = m_Gameplay.FindAction("MouseControlCamera", throwIfNotFound: true);
-		m_Gameplay_Run = m_Gameplay.FindAction("Run", throwIfNotFound: true);
+		m_Gameplay = asset.FindActionMap("Gameplay", true);
+		m_Gameplay_Move = m_Gameplay.FindAction("Move", true);
+		m_Gameplay_Jump = m_Gameplay.FindAction("Jump", true);
+		m_Gameplay_Attack = m_Gameplay.FindAction("Attack", true);
+		m_Gameplay_Interact = m_Gameplay.FindAction("Interact", true);
+		m_Gameplay_Pause = m_Gameplay.FindAction("Pause", true);
+		m_Gameplay_OpenInventory = m_Gameplay.FindAction("OpenInventory", true);
+		m_Gameplay_RotateCamera = m_Gameplay.FindAction("RotateCamera", true);
+		m_Gameplay_MouseControlCamera = m_Gameplay.FindAction("MouseControlCamera", true);
+		m_Gameplay_Run = m_Gameplay.FindAction("Run", true);
 		// Menus
-		m_Menus = asset.FindActionMap("Menus", throwIfNotFound: true);
-		m_Menus_MoveSelection = m_Menus.FindAction("MoveSelection", throwIfNotFound: true);
-		m_Menus_Confirm = m_Menus.FindAction("Confirm", throwIfNotFound: true);
-		m_Menus_Cancel = m_Menus.FindAction("Cancel", throwIfNotFound: true);
-		m_Menus_MouseMove = m_Menus.FindAction("MouseMove", throwIfNotFound: true);
-		m_Menus_Unpause = m_Menus.FindAction("Unpause", throwIfNotFound: true);
+		m_Menus = asset.FindActionMap("Menus", true);
+		m_Menus_MoveSelection = m_Menus.FindAction("MoveSelection", true);
+		m_Menus_Confirm = m_Menus.FindAction("Confirm", true);
+		m_Menus_Cancel = m_Menus.FindAction("Cancel", true);
+		m_Menus_MouseMove = m_Menus.FindAction("MouseMove", true);
+		m_Menus_Unpause = m_Menus.FindAction("Unpause", true);
 		// Dialogues
-		m_Dialogues = asset.FindActionMap("Dialogues", throwIfNotFound: true);
-		m_Dialogues_MoveSelection = m_Dialogues.FindAction("MoveSelection", throwIfNotFound: true);
-		m_Dialogues_AdvanceDialogue = m_Dialogues.FindAction("AdvanceDialogue", throwIfNotFound: true);
+		m_Dialogues = asset.FindActionMap("Dialogues", true);
+		m_Dialogues_MoveSelection = m_Dialogues.FindAction("MoveSelection", true);
+		m_Dialogues_AdvanceDialogue = m_Dialogues.FindAction("AdvanceDialogue", true);
 	}
 
 	public void Dispose()
@@ -1201,17 +1202,35 @@ public class @GameInput : IInputActionCollection, IDisposable
 
 	public InputBinding? bindingMask
 	{
-		get => asset.bindingMask;
-		set => asset.bindingMask = value;
+		get
+		{
+			return asset.bindingMask;
+		}
+		set
+		{
+			asset.bindingMask = value;
+		}
 	}
 
 	public ReadOnlyArray<InputDevice>? devices
 	{
-		get => asset.devices;
-		set => asset.devices = value;
+		get
+		{
+			return asset.devices;
+		}
+		set
+		{
+			asset.devices = value;
+		}
 	}
 
-	public ReadOnlyArray<InputControlScheme> controlSchemes => asset.controlSchemes;
+	public ReadOnlyArray<InputControlScheme> controlSchemes
+	{
+		get
+		{
+			return asset.controlSchemes;
+		}
+	}
 
 	public bool Contains(InputAction action)
 	{
@@ -1239,35 +1258,109 @@ public class @GameInput : IInputActionCollection, IDisposable
 	}
 
 	// Gameplay
-	private readonly InputActionMap m_Gameplay;
-	private IGameplayActions m_GameplayActionsCallbackInterface;
-	private readonly InputAction m_Gameplay_Move;
-	private readonly InputAction m_Gameplay_Jump;
-	private readonly InputAction m_Gameplay_Attack;
-	private readonly InputAction m_Gameplay_Interact;
-	private readonly InputAction m_Gameplay_Pause;
-	private readonly InputAction m_Gameplay_OpenInventory;
-	private readonly InputAction m_Gameplay_RotateCamera;
-	private readonly InputAction m_Gameplay_MouseControlCamera;
-	private readonly InputAction m_Gameplay_Run;
+	readonly InputActionMap m_Gameplay;
+	IGameplayActions m_GameplayActionsCallbackInterface;
+	readonly InputAction m_Gameplay_Move;
+	readonly InputAction m_Gameplay_Jump;
+	readonly InputAction m_Gameplay_Attack;
+	readonly InputAction m_Gameplay_Interact;
+	readonly InputAction m_Gameplay_Pause;
+	readonly InputAction m_Gameplay_OpenInventory;
+	readonly InputAction m_Gameplay_RotateCamera;
+	readonly InputAction m_Gameplay_MouseControlCamera;
+	readonly InputAction m_Gameplay_Run;
+
 	public struct GameplayActions
 	{
-		private @GameInput m_Wrapper;
+		@GameInput m_Wrapper;
 		public GameplayActions(@GameInput wrapper) { m_Wrapper = wrapper; }
-		public InputAction @Move => m_Wrapper.m_Gameplay_Move;
-		public InputAction @Jump => m_Wrapper.m_Gameplay_Jump;
-		public InputAction @Attack => m_Wrapper.m_Gameplay_Attack;
-		public InputAction @Interact => m_Wrapper.m_Gameplay_Interact;
-		public InputAction @Pause => m_Wrapper.m_Gameplay_Pause;
-		public InputAction @OpenInventory => m_Wrapper.m_Gameplay_OpenInventory;
-		public InputAction @RotateCamera => m_Wrapper.m_Gameplay_RotateCamera;
-		public InputAction @MouseControlCamera => m_Wrapper.m_Gameplay_MouseControlCamera;
-		public InputAction @Run => m_Wrapper.m_Gameplay_Run;
+
+		public InputAction @Move
+		{
+			get
+			{
+				return m_Wrapper.m_Gameplay_Move;
+			}
+		}
+
+		public InputAction @Jump
+		{
+			get
+			{
+				return m_Wrapper.m_Gameplay_Jump;
+			}
+		}
+
+		public InputAction @Attack
+		{
+			get
+			{
+				return m_Wrapper.m_Gameplay_Attack;
+			}
+		}
+
+		public InputAction @Interact
+		{
+			get
+			{
+				return m_Wrapper.m_Gameplay_Interact;
+			}
+		}
+
+		public InputAction @Pause
+		{
+			get
+			{
+				return m_Wrapper.m_Gameplay_Pause;
+			}
+		}
+
+		public InputAction @OpenInventory
+		{
+			get
+			{
+				return m_Wrapper.m_Gameplay_OpenInventory;
+			}
+		}
+
+		public InputAction @RotateCamera
+		{
+			get
+			{
+				return m_Wrapper.m_Gameplay_RotateCamera;
+			}
+		}
+
+		public InputAction @MouseControlCamera
+		{
+			get
+			{
+				return m_Wrapper.m_Gameplay_MouseControlCamera;
+			}
+		}
+
+		public InputAction @Run
+		{
+			get
+			{
+				return m_Wrapper.m_Gameplay_Run;
+			}
+		}
+
 		public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
 		public void Enable() { Get().Enable(); }
 		public void Disable() { Get().Disable(); }
-		public bool enabled => Get().enabled;
+
+		public bool enabled
+		{
+			get
+			{
+				return Get().enabled;
+			}
+		}
+
 		public static implicit operator InputActionMap(GameplayActions set) { return set.Get(); }
+
 		public void SetCallbacks(IGameplayActions instance)
 		{
 			if (m_Wrapper.m_GameplayActionsCallbackInterface != null)
@@ -1300,6 +1393,7 @@ public class @GameInput : IInputActionCollection, IDisposable
 				@Run.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRun;
 				@Run.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRun;
 			}
+
 			m_Wrapper.m_GameplayActionsCallbackInterface = instance;
 			if (instance != null)
 			{
@@ -1333,30 +1427,83 @@ public class @GameInput : IInputActionCollection, IDisposable
 			}
 		}
 	}
-	public GameplayActions @Gameplay => new GameplayActions(this);
+
+	public GameplayActions @Gameplay
+	{
+		get
+		{
+			return new GameplayActions(this);
+		}
+	}
 
 	// Menus
-	private readonly InputActionMap m_Menus;
-	private IMenusActions m_MenusActionsCallbackInterface;
-	private readonly InputAction m_Menus_MoveSelection;
-	private readonly InputAction m_Menus_Confirm;
-	private readonly InputAction m_Menus_Cancel;
-	private readonly InputAction m_Menus_MouseMove;
-	private readonly InputAction m_Menus_Unpause;
+	readonly InputActionMap m_Menus;
+	IMenusActions m_MenusActionsCallbackInterface;
+	readonly InputAction m_Menus_MoveSelection;
+	readonly InputAction m_Menus_Confirm;
+	readonly InputAction m_Menus_Cancel;
+	readonly InputAction m_Menus_MouseMove;
+	readonly InputAction m_Menus_Unpause;
+
 	public struct MenusActions
 	{
-		private @GameInput m_Wrapper;
+		@GameInput m_Wrapper;
 		public MenusActions(@GameInput wrapper) { m_Wrapper = wrapper; }
-		public InputAction @MoveSelection => m_Wrapper.m_Menus_MoveSelection;
-		public InputAction @Confirm => m_Wrapper.m_Menus_Confirm;
-		public InputAction @Cancel => m_Wrapper.m_Menus_Cancel;
-		public InputAction @MouseMove => m_Wrapper.m_Menus_MouseMove;
-		public InputAction @Unpause => m_Wrapper.m_Menus_Unpause;
+
+		public InputAction @MoveSelection
+		{
+			get
+			{
+				return m_Wrapper.m_Menus_MoveSelection;
+			}
+		}
+
+		public InputAction @Confirm
+		{
+			get
+			{
+				return m_Wrapper.m_Menus_Confirm;
+			}
+		}
+
+		public InputAction @Cancel
+		{
+			get
+			{
+				return m_Wrapper.m_Menus_Cancel;
+			}
+		}
+
+		public InputAction @MouseMove
+		{
+			get
+			{
+				return m_Wrapper.m_Menus_MouseMove;
+			}
+		}
+
+		public InputAction @Unpause
+		{
+			get
+			{
+				return m_Wrapper.m_Menus_Unpause;
+			}
+		}
+
 		public InputActionMap Get() { return m_Wrapper.m_Menus; }
 		public void Enable() { Get().Enable(); }
 		public void Disable() { Get().Disable(); }
-		public bool enabled => Get().enabled;
+
+		public bool enabled
+		{
+			get
+			{
+				return Get().enabled;
+			}
+		}
+
 		public static implicit operator InputActionMap(MenusActions set) { return set.Get(); }
+
 		public void SetCallbacks(IMenusActions instance)
 		{
 			if (m_Wrapper.m_MenusActionsCallbackInterface != null)
@@ -1377,6 +1524,7 @@ public class @GameInput : IInputActionCollection, IDisposable
 				@Unpause.performed -= m_Wrapper.m_MenusActionsCallbackInterface.OnUnpause;
 				@Unpause.canceled -= m_Wrapper.m_MenusActionsCallbackInterface.OnUnpause;
 			}
+
 			m_Wrapper.m_MenusActionsCallbackInterface = instance;
 			if (instance != null)
 			{
@@ -1398,24 +1546,56 @@ public class @GameInput : IInputActionCollection, IDisposable
 			}
 		}
 	}
-	public MenusActions @Menus => new MenusActions(this);
+
+	public MenusActions @Menus
+	{
+		get
+		{
+			return new MenusActions(this);
+		}
+	}
 
 	// Dialogues
-	private readonly InputActionMap m_Dialogues;
-	private IDialoguesActions m_DialoguesActionsCallbackInterface;
-	private readonly InputAction m_Dialogues_MoveSelection;
-	private readonly InputAction m_Dialogues_AdvanceDialogue;
+	readonly InputActionMap m_Dialogues;
+	IDialoguesActions m_DialoguesActionsCallbackInterface;
+	readonly InputAction m_Dialogues_MoveSelection;
+	readonly InputAction m_Dialogues_AdvanceDialogue;
+
 	public struct DialoguesActions
 	{
-		private @GameInput m_Wrapper;
+		@GameInput m_Wrapper;
 		public DialoguesActions(@GameInput wrapper) { m_Wrapper = wrapper; }
-		public InputAction @MoveSelection => m_Wrapper.m_Dialogues_MoveSelection;
-		public InputAction @AdvanceDialogue => m_Wrapper.m_Dialogues_AdvanceDialogue;
+
+		public InputAction @MoveSelection
+		{
+			get
+			{
+				return m_Wrapper.m_Dialogues_MoveSelection;
+			}
+		}
+
+		public InputAction @AdvanceDialogue
+		{
+			get
+			{
+				return m_Wrapper.m_Dialogues_AdvanceDialogue;
+			}
+		}
+
 		public InputActionMap Get() { return m_Wrapper.m_Dialogues; }
 		public void Enable() { Get().Enable(); }
 		public void Disable() { Get().Disable(); }
-		public bool enabled => Get().enabled;
+
+		public bool enabled
+		{
+			get
+			{
+				return Get().enabled;
+			}
+		}
+
 		public static implicit operator InputActionMap(DialoguesActions set) { return set.Get(); }
+
 		public void SetCallbacks(IDialoguesActions instance)
 		{
 			if (m_Wrapper.m_DialoguesActionsCallbackInterface != null)
@@ -1427,6 +1607,7 @@ public class @GameInput : IInputActionCollection, IDisposable
 				@AdvanceDialogue.performed -= m_Wrapper.m_DialoguesActionsCallbackInterface.OnAdvanceDialogue;
 				@AdvanceDialogue.canceled -= m_Wrapper.m_DialoguesActionsCallbackInterface.OnAdvanceDialogue;
 			}
+
 			m_Wrapper.m_DialoguesActionsCallbackInterface = instance;
 			if (instance != null)
 			{
@@ -1439,17 +1620,30 @@ public class @GameInput : IInputActionCollection, IDisposable
 			}
 		}
 	}
-	public DialoguesActions @Dialogues => new DialoguesActions(this);
-	private int m_KeyboardOrGamepadSchemeIndex = -1;
+
+	public DialoguesActions @Dialogues
+	{
+		get
+		{
+			return new DialoguesActions(this);
+		}
+	}
+
+	int m_KeyboardOrGamepadSchemeIndex = -1;
+
 	public InputControlScheme KeyboardOrGamepadScheme
 	{
 		get
 		{
 			if (m_KeyboardOrGamepadSchemeIndex == -1)
+			{
 				m_KeyboardOrGamepadSchemeIndex = asset.FindControlSchemeIndex("KeyboardOrGamepad");
+			}
+
 			return asset.controlSchemes[m_KeyboardOrGamepadSchemeIndex];
 		}
 	}
+
 	public interface IGameplayActions
 	{
 		void OnMove(InputAction.CallbackContext context);
@@ -1462,6 +1656,7 @@ public class @GameInput : IInputActionCollection, IDisposable
 		void OnMouseControlCamera(InputAction.CallbackContext context);
 		void OnRun(InputAction.CallbackContext context);
 	}
+
 	public interface IMenusActions
 	{
 		void OnMoveSelection(InputAction.CallbackContext context);
@@ -1470,6 +1665,7 @@ public class @GameInput : IInputActionCollection, IDisposable
 		void OnMouseMove(InputAction.CallbackContext context);
 		void OnUnpause(InputAction.CallbackContext context);
 	}
+
 	public interface IDialoguesActions
 	{
 		void OnMoveSelection(InputAction.CallbackContext context);

@@ -5,12 +5,14 @@ using UOP1.StateMachine.ScriptableObjects;
 //TODO: Cleanup all the Actions related to jump particles, there are too many specific scripts now
 
 [CreateAssetMenu(fileName = "PlayLiftoffJumpParticlesAction", menuName = "State Machines/Actions/Play Liftoff Jump Particles Action")]
-public class PlayLiftoffJumpParticlesActionSO : StateActionSO<PlayLiftoffJumpParticlesAction> { }
+public class PlayLiftoffJumpParticlesActionSO : StateActionSO<PlayLiftoffJumpParticlesAction>
+{
+}
 
 public class PlayLiftoffJumpParticlesAction : StateAction
 {
 	//Component references
-	private PlayerEffectController _dustController;
+	PlayerEffectController _dustController;
 
 	public override void Awake(StateMachine stateMachine)
 	{

@@ -3,14 +3,16 @@ using UOP1.StateMachine;
 using UOP1.StateMachine.ScriptableObjects;
 
 [CreateAssetMenu(menuName = "State Machines/Conditions/Has Hit the Head")]
-public class HasHitHeadConditionSO : StateConditionSO<HasHitHeadCondition> { }
+public class HasHitHeadConditionSO : StateConditionSO<HasHitHeadCondition>
+{
+}
 
 public class HasHitHeadCondition : Condition
 {
 	//Component references
-	private Protagonist _protagonistScript;
-	private CharacterController _characterController;
-	private Transform _transform;
+	Protagonist _protagonistScript;
+	CharacterController _characterController;
+	Transform _transform;
 
 	public override void Awake(StateMachine stateMachine)
 	{

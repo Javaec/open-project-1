@@ -5,8 +5,8 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class SaveSystem : ScriptableObject
 {
-	[SerializeField] private LoadEventChannelSO _loadLocation = default;
-	[SerializeField] private Inventory _playerInventory;
+	[SerializeField] LoadEventChannelSO _loadLocation = default;
+	[SerializeField] Inventory _playerInventory;
 
 	public string saveFilename = "save.chop";
 	public string backupSaveFilename = "save.chop.bak";
@@ -22,7 +22,7 @@ public class SaveSystem : ScriptableObject
 		_loadLocation.OnLoadingRequested -= CacheLoadLocations;
 	}
 
-	private void CacheLoadLocations(GameSceneSO[] locationsToLoad, bool showLoadingScreen)
+	void CacheLoadLocations(GameSceneSO[] locationsToLoad, bool showLoadingScreen)
 	{
 		LocationSO locationSo = locationsToLoad[0] as LocationSO;
 		if (locationSo)
@@ -35,7 +35,7 @@ public class SaveSystem : ScriptableObject
 
 	public bool LoadSaveDataFromDisk()
 	{
-		if (FileManager.LoadFromFile(saveFilename, out var json))
+		if (FileManager.LoadFromFile(saveFilename, out string json))
 		{
 			saveData.LoadFromJson(json);
 			return true;
@@ -47,13 +47,13 @@ public class SaveSystem : ScriptableObject
 	public IEnumerator LoadSavedInventory()
 	{
 		_playerInventory.Items.Clear();
-		foreach (var serializedItemStack in saveData._itemStacks)
+		foreach (SerializedItemStack serializedItemStack in saveData._itemStacks)
 		{
-			var loadItemOperationHandle = Addressables.LoadAssetAsync<Item>(serializedItemStack.itemGuid);
+			AsyncOperationHandle<Item> loadItemOperationHandle = Addressables.LoadAssetAsync<Item>(serializedItemStack.itemGuid);
 			yield return loadItemOperationHandle;
 			if (loadItemOperationHandle.Status == AsyncOperationStatus.Succeeded)
 			{
-				var itemSo = loadItemOperationHandle.Result;
+				Item itemSo = loadItemOperationHandle.Result;
 				_playerInventory.Add(itemSo, serializedItemStack.amount);
 			}
 		}
@@ -62,7 +62,7 @@ public class SaveSystem : ScriptableObject
 	public void SaveDataToDisk()
 	{
 		saveData._itemStacks.Clear();
-		foreach (var itemStack in _playerInventory.Items)
+		foreach (ItemStack itemStack in _playerInventory.Items)
 		{
 			saveData._itemStacks.Add(new SerializedItemStack(itemStack.Item.Guid, itemStack.Amount));
 		}

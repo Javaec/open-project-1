@@ -8,8 +8,9 @@ namespace UOP1.Pool
 	/// <typeparam name="T">Specifies the component to pool.</typeparam>
 	public abstract class ComponentPoolSO<T> : PoolSO<T> where T : Component
 	{
-		private Transform _poolRoot;
-		private Transform PoolRoot
+		Transform _poolRoot;
+
+		Transform PoolRoot
 		{
 			get
 			{
@@ -18,11 +19,12 @@ namespace UOP1.Pool
 					_poolRoot = new GameObject(name).transform;
 					_poolRoot.SetParent(_parent);
 				}
+
 				return _poolRoot;
 			}
 		}
 
-		private Transform _parent;
+		Transform _parent;
 
 		/// <summary>
 		/// Parents the pool root transform to <paramref name="t"/>.

@@ -10,9 +10,15 @@ public class HasReceivedEventSO : StateConditionSO<HasReceivedEventCondition>
 
 public class HasReceivedEventCondition : Condition
 {
-	private HasReceivedEventSO _originSO => (HasReceivedEventSO)base.OriginSO; // The SO this Condition spawned from
+	HasReceivedEventSO _originSO
+	{
+		get
+		{
+			return (HasReceivedEventSO)OriginSO; // The SO this Condition spawned from
+		}
+	}
 
-	private bool _eventTriggered;
+	bool _eventTriggered;
 
 	public override void Awake(StateMachine stateMachine)
 	{
@@ -25,7 +31,7 @@ public class HasReceivedEventCondition : Condition
 		return _eventTriggered;
 	}
 
-	private void EventReceived()
+	void EventReceived()
 	{
 		_eventTriggered = true;
 	}

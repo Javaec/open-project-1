@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Reflection;
 using TMPro;
 using UnityEditor.Localization;
 using UnityEngine.Events;
+using UnityEngine.Localization.Tables;
 
 namespace UnityEngine.Localization.Components
 {
@@ -11,25 +14,28 @@ namespace UnityEngine.Localization.Components
 	[AddComponentMenu("Localization/Asset/Localize TMPro Font Event")]
 	public class LocalizeTMProFontEvent : LocalizedAssetEvent<TMP_FontAsset, LocalizedTMProFont, UnityEventFont>
 	{
-		private void Reset()
+		void Reset()
 		{
 			//Set up Unity Event automatically
-			var target = GetComponent<TextMeshProUGUI>();
-			var setFontMethod = target.GetType().GetProperty("font").GetSetMethod();
-			var methodDelegate = System.Delegate.CreateDelegate(typeof(UnityAction<TMP_FontAsset>), target, setFontMethod) as UnityAction<TMP_FontAsset>;
-			UnityEditor.Events.UnityEventTools.AddPersistentListener(this.OnUpdateAsset, methodDelegate);
+			TextMeshProUGUI target = GetComponent<TextMeshProUGUI>();
+			MethodInfo setFontMethod = target.GetType().GetProperty("font").GetSetMethod();
+			UnityAction<TMP_FontAsset> methodDelegate =
+				Delegate.CreateDelegate(typeof(UnityAction<TMP_FontAsset>), target, setFontMethod) as UnityAction<TMP_FontAsset>;
+			UnityEditor.Events.UnityEventTools.AddPersistentListener(OnUpdateAsset, methodDelegate);
 
 			//Set up font localize asset table automatically
-			var collections = LocalizationEditorSettings.GetAssetTableCollections();
-			foreach (var tableCollection in collections)
+			ReadOnlyCollection<AssetTableCollection> collections = LocalizationEditorSettings.GetAssetTableCollections();
+			foreach (AssetTableCollection tableCollection in collections)
 			{
 				if (tableCollection.name == "Fonts")
 				{
-					this.AssetReference.TableReference = tableCollection.TableCollectionNameReference;
-					foreach (var entry in tableCollection.SharedData.Entries)
+					AssetReference.TableReference = tableCollection.TableCollectionNameReference;
+					foreach (SharedTableData.SharedTableEntry entry in tableCollection.SharedData.Entries)
 					{
 						if (entry.Key == "font")
-							this.AssetReference.TableEntryReference = entry.Id;
+						{
+							AssetReference.TableEntryReference = entry.Id;
+						}
 					}
 				}
 			}
@@ -37,10 +43,12 @@ namespace UnityEngine.Localization.Components
 	}
 
 	[Serializable]
-	public class LocalizedTMProFont : LocalizedAsset<TMP_FontAsset> { }
+	public class LocalizedTMProFont : LocalizedAsset<TMP_FontAsset>
+	{
+	}
 
 	[Serializable]
-	public class UnityEventFont : UnityEvent<TMP_FontAsset> { }
-
-
+	public class UnityEventFont : UnityEvent<TMP_FontAsset>
+	{
+	}
 }

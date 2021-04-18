@@ -11,10 +11,12 @@ namespace UOP1.Pool
 	public abstract class PoolSO<T> : ScriptableObject, IPool<T>
 	{
 		protected readonly Stack<T> Available = new Stack<T>();
+
 		/// <summary>
 		/// The factory which will be used to create <typeparamref name="T"/> on demand.
 		/// </summary>
 		public abstract IFactory<T> Factory { get; set; }
+
 		protected bool HasBeenPrewarmed { get; set; }
 
 		protected virtual T Create()
@@ -34,10 +36,12 @@ namespace UOP1.Pool
 				Debug.LogWarning($"Pool {name} has already been prewarmed.");
 				return;
 			}
+
 			for (int i = 0; i < num; i++)
 			{
 				Available.Push(Create());
 			}
+
 			HasBeenPrewarmed = true;
 		}
 
@@ -61,6 +65,7 @@ namespace UOP1.Pool
 			{
 				members.Add(Request());
 			}
+
 			return members;
 		}
 

@@ -7,7 +7,6 @@ using UnityEngine.Events;
 [System.Serializable]
 public class IntEvent : UnityEvent<int>
 {
-
 }
 
 /// <summary>
@@ -15,25 +14,31 @@ public class IntEvent : UnityEvent<int>
 /// </summary>
 public class IntEventListener : MonoBehaviour
 {
-	[SerializeField] private IntEventChannelSO _channel = default;
+	[SerializeField] IntEventChannelSO _channel = default;
 
 	public IntEvent OnEventRaised;
 
-	private void OnEnable()
+	void OnEnable()
 	{
 		if (_channel != null)
+		{
 			_channel.OnEventRaised += Respond;
+		}
 	}
 
-	private void OnDisable()
+	void OnDisable()
 	{
 		if (_channel != null)
+		{
 			_channel.OnEventRaised -= Respond;
+		}
 	}
 
-	private void Respond(int value)
+	void Respond(int value)
 	{
 		if (OnEventRaised != null)
+		{
 			OnEventRaised.Invoke(value);
+		}
 	}
 }

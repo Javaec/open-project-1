@@ -3,13 +3,15 @@ using UOP1.StateMachine;
 using UOP1.StateMachine.ScriptableObjects;
 
 [CreateAssetMenu(fileName = "ApplyMovementVector", menuName = "State Machines/Actions/Apply Movement Vector")]
-public class ApplyMovementVectorActionSO : StateActionSO<ApplyMovementVectorAction> { }
+public class ApplyMovementVectorActionSO : StateActionSO<ApplyMovementVectorAction>
+{
+}
 
 public class ApplyMovementVectorAction : StateAction
 {
 	//Component references
-	private Protagonist _protagonistScript;
-	private CharacterController _characterController;
+	Protagonist _protagonistScript;
+	CharacterController _characterController;
 
 	public override void Awake(StateMachine stateMachine)
 	{

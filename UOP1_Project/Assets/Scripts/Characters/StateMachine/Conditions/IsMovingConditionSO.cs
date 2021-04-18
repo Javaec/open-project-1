@@ -10,8 +10,15 @@ public class IsMovingConditionSO : StateConditionSO<IsMovingCondition>
 
 public class IsMovingCondition : Condition
 {
-	private Protagonist _protagonistScript;
-	private IsMovingConditionSO _originSO => (IsMovingConditionSO)base.OriginSO; // The SO this Condition spawned from
+	Protagonist _protagonistScript;
+
+	IsMovingConditionSO _originSO
+	{
+		get
+		{
+			return (IsMovingConditionSO)OriginSO; // The SO this Condition spawned from
+		}
+	}
 
 	public override void Awake(StateMachine stateMachine)
 	{

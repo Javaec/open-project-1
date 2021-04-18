@@ -19,7 +19,7 @@ public class PathwayGizmos
 	}
 
 
-	private static void DrawLabel(PathwayConfigSO pathway, Vector3 path, int index)
+	static void DrawLabel(PathwayConfigSO pathway, Vector3 path, int index)
 	{
 		GUIStyle style = new GUIStyle();
 		Vector3 textHeight = Vector3.up;
@@ -30,7 +30,7 @@ public class PathwayGizmos
 		Handles.Label(path + textHeight, index.ToString(), style);
 	}
 
-	private static void DrawHandlesPath(PathwayConfigSO pathway)
+	static void DrawHandlesPath(PathwayConfigSO pathway)
 	{
 		Handles.color = pathway.LineColor;
 
@@ -54,7 +54,7 @@ public class PathwayGizmos
 		}
 	}
 
-	private static void DrawNavMeshPath(PathwayConfigSO pathway)
+	static void DrawNavMeshPath(PathwayConfigSO pathway)
 	{
 		Handles.color = pathway.LineColor;
 
@@ -69,7 +69,7 @@ public class PathwayGizmos
 		}
 	}
 
-	private static void DrawHitPoints(PathwayConfigSO pathway)
+	static void DrawHitPoints(PathwayConfigSO pathway)
 	{
 		if (pathway.DisplayProbes)
 		{

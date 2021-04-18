@@ -3,25 +3,51 @@ using UnityEngine.Events;
 
 public class Damageable : MonoBehaviour
 {
-	[SerializeField] private HealthConfigSO _healthConfigSO;
-	[SerializeField] private GetHitEffectConfigSO _getHitEffectSO;
-	[SerializeField] private Renderer _mainMeshRenderer;
-	[SerializeField] private DroppableRewardConfigSO _droppableRewardSO;
-	public DroppableRewardConfigSO DropableRewardConfig => _droppableRewardSO;
+	[SerializeField] HealthConfigSO _healthConfigSO;
+	[SerializeField] GetHitEffectConfigSO _getHitEffectSO;
+	[SerializeField] Renderer _mainMeshRenderer;
+	[SerializeField] DroppableRewardConfigSO _droppableRewardSO;
 
-	private int _currentHealth = default;
+	public DroppableRewardConfigSO DropableRewardConfig
+	{
+		get
+		{
+			return _droppableRewardSO;
+		}
+	}
+
+	int _currentHealth = default;
 
 	public bool GetHit { get; set; }
 	public bool IsDead { get; set; }
 
-	public GetHitEffectConfigSO GetHitEffectConfig => _getHitEffectSO;
-	public Renderer MainMeshRenderer => _mainMeshRenderer;
+	public GetHitEffectConfigSO GetHitEffectConfig
+	{
+		get
+		{
+			return _getHitEffectSO;
+		}
+	}
 
-	public int CurrentHealth => _currentHealth;
+	public Renderer MainMeshRenderer
+	{
+		get
+		{
+			return _mainMeshRenderer;
+		}
+	}
+
+	public int CurrentHealth
+	{
+		get
+		{
+			return _currentHealth;
+		}
+	}
 
 	public UnityAction OnDie;
 
-	private void Awake()
+	void Awake()
 	{
 		_currentHealth = _healthConfigSO.MaxHealth;
 	}
@@ -34,7 +60,9 @@ public class Damageable : MonoBehaviour
 		{
 			IsDead = true;
 			if (OnDie != null)
+			{
 				OnDie.Invoke();
+			}
 		}
 	}
 }

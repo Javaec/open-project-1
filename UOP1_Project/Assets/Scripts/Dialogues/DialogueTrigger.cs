@@ -2,10 +2,10 @@
 
 public class DialogueTrigger : MonoBehaviour
 {
-	[SerializeField] private DialogueManager _dialogueManager = default;
-	[SerializeField] private DialogueDataSO _dialogueData = default;
+	[SerializeField] DialogueManager _dialogueManager = default;
+	[SerializeField] DialogueDataSO _dialogueData = default;
 
-	private void OnTriggerEnter(Collider other)
+	void OnTriggerEnter(Collider other)
 	{
 		_dialogueManager.DisplayDialogueData(_dialogueData);
 	}

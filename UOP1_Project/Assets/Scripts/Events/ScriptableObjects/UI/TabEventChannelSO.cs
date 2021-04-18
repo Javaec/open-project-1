@@ -7,9 +7,12 @@ using UnityEngine.Events;
 public class TabEventChannelSO : ScriptableObject
 {
 	public UnityAction<InventoryTabType> OnEventRaised;
+
 	public void RaiseEvent(InventoryTabType item)
 	{
 		if (OnEventRaised != null)
+		{
 			OnEventRaised.Invoke(item);
+		}
 	}
 }

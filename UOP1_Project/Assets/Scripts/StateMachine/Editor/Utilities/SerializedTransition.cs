@@ -2,7 +2,7 @@
 
 namespace UOP1.StateMachine.Editor
 {
-	internal readonly struct SerializedTransition
+	readonly struct SerializedTransition
 	{
 		internal readonly SerializedProperty Transition;
 		internal readonly SerializedProperty FromState;

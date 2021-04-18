@@ -3,20 +3,22 @@ using UOP1.StateMachine;
 using UOP1.StateMachine.ScriptableObjects;
 
 [CreateAssetMenu(menuName = "State Machines/Actions/Play Land Particles")]
-public class PlayLandParticlesActionSO : StateActionSO<PlayLandParticlesAction> { }
+public class PlayLandParticlesActionSO : StateActionSO<PlayLandParticlesAction>
+{
+}
 
 public class PlayLandParticlesAction : StateAction
 {
 	//Component references
-	private PlayerEffectController _dustController;
-	private Transform _transform;
+	PlayerEffectController _dustController;
+	Transform _transform;
 
-	private float _coolDown = 0.3f;
-	private float t = 0f;
+	float _coolDown = 0.3f;
+	float t = 0f;
 
-	private float _fallStartY = 0f;
-	private float _fallEndY = 0f;
-	private float _maxFallDistance = 4f; //Used to adjust particle emission intensity
+	float _fallStartY = 0f;
+	float _fallEndY = 0f;
+	float _maxFallDistance = 4f; //Used to adjust particle emission intensity
 
 	public override void Awake(StateMachine stateMachine)
 	{

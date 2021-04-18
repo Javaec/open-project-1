@@ -4,16 +4,36 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "RoamingAroundCenter", menuName = "EntityConfig/Roaming Around Center")]
 public class RoamingAroundCenterConfigSO : NPCMovementConfigSO
 {
-	[Tooltip("Is roaming from spwaning center")]
-	[SerializeField] private bool _fromSpawningPoint = true;
+	[Tooltip("Is roaming from spwaning center")] [SerializeField]
+	bool _fromSpawningPoint = true;
 
-	[Tooltip("Custom roaming center")]
-	[SerializeField] private Vector3 _customCenter;
+	[Tooltip("Custom roaming center")] [SerializeField]
+	Vector3 _customCenter;
 
-	[Tooltip("Roaming distance from center")]
-	[SerializeField] private float _radius;
+	[Tooltip("Roaming distance from center")] [SerializeField]
+	float _radius;
 
-	public bool FromSpawningPoint => _fromSpawningPoint;
-	public Vector3 CustomCenter => _customCenter;
-	public float Radius => _radius;
+	public bool FromSpawningPoint
+	{
+		get
+		{
+			return _fromSpawningPoint;
+		}
+	}
+
+	public Vector3 CustomCenter
+	{
+		get
+		{
+			return _customCenter;
+		}
+	}
+
+	public float Radius
+	{
+		get
+		{
+			return _radius;
+		}
+	}
 }

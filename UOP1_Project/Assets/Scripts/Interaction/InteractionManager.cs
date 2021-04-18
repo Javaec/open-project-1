@@ -6,35 +6,40 @@ public enum InteractionType { None = 0, PickUp, Cook, Talk };
 public class InteractionManager : MonoBehaviour
 {
 	[HideInInspector] public InteractionType currentInteractionType; //This is checked by conditions in the StateMachine
-	[SerializeField] private InputReader _inputReader = default;
+
+	[SerializeField] InputReader _inputReader = default;
+
 	//To store the object we are currently interacting with
-	private LinkedList<Interaction> _potentialInteractions = new LinkedList<Interaction>();
+	LinkedList<Interaction> _potentialInteractions = new LinkedList<Interaction>();
 
 	//Events for the different interaction types
-	[Header("Broadcasting on")]
-	[SerializeField] private ItemEventChannelSO _onObjectPickUp = default;
-	[SerializeField] private VoidEventChannelSO _onCookingStart = default;
-	[SerializeField] private DialogueActorChannelSO _startTalking = default;
+	[Header("Broadcasting on")] [SerializeField]
+	ItemEventChannelSO _onObjectPickUp = default;
+
+	[SerializeField] VoidEventChannelSO _onCookingStart = default;
+
+	[SerializeField] DialogueActorChannelSO _startTalking = default;
+
 	//UI event
-	[SerializeField] private InteractionUIEventChannelSO _toggleInteractionUI = default;
+	[SerializeField] InteractionUIEventChannelSO _toggleInteractionUI = default;
 
-	[Header("Listening to")]
-	[SerializeField] private VoidEventChannelSO _onInteractionEnded = default;
+	[Header("Listening to")] [SerializeField]
+	VoidEventChannelSO _onInteractionEnded = default;
 
-	private void OnEnable()
+	void OnEnable()
 	{
 		_inputReader.interactEvent += OnInteractionButtonPress;
 		_onInteractionEnded.OnEventRaised += OnInteractionEnd;
 	}
 
-	private void OnDisable()
+	void OnDisable()
 	{
 		_inputReader.interactEvent -= OnInteractionButtonPress;
 		_onInteractionEnded.OnEventRaised -= OnInteractionEnd;
 	}
 
 	// Called mid-way through the AnimationClip of collecting
-	private void Collect()
+	void Collect()
 	{
 		GameObject itemObject = _potentialInteractions.First.Value.interactableObject;
 		_potentialInteractions.RemoveFirst();
@@ -50,10 +55,12 @@ public class InteractionManager : MonoBehaviour
 		RequestUpdateUI(false);
 	}
 
-	private void OnInteractionButtonPress()
+	void OnInteractionButtonPress()
 	{
 		if (_potentialInteractions.Count == 0)
+		{
 			return;
+		}
 
 		currentInteractionType = _potentialInteractions.First.Value.type;
 
@@ -65,6 +72,7 @@ public class InteractionManager : MonoBehaviour
 					_onCookingStart.RaiseEvent();
 					_inputReader.EnableMenuInput();
 				}
+
 				break;
 
 			case InteractionType.Talk:
@@ -73,10 +81,11 @@ public class InteractionManager : MonoBehaviour
 					_potentialInteractions.First.Value.interactableObject.GetComponent<StepController>().InteractWithCharacter();
 					_inputReader.EnableDialogueInput();
 				}
+
 				break;
 
-				//No need to do anything for Pickup type, the StateMachine will transition to the state
-				//and then the AnimationClip will call Collect()
+			//No need to do anything for Pickup type, the StateMachine will transition to the state
+			//and then the AnimationClip will call Collect()
 		}
 	}
 
@@ -84,12 +93,16 @@ public class InteractionManager : MonoBehaviour
 	public void OnTriggerChangeDetected(bool entered, GameObject obj)
 	{
 		if (entered)
+		{
 			AddPotentialInteraction(obj);
+		}
 		else
+		{
 			RemovePotentialInteraction(obj);
+		}
 	}
 
-	private void AddPotentialInteraction(GameObject obj)
+	void AddPotentialInteraction(GameObject obj)
 	{
 		Interaction newPotentialInteraction = new Interaction(InteractionType.None, obj);
 
@@ -113,7 +126,7 @@ public class InteractionManager : MonoBehaviour
 		}
 	}
 
-	private void RemovePotentialInteraction(GameObject obj)
+	void RemovePotentialInteraction(GameObject obj)
 	{
 		LinkedListNode<Interaction> currentNode = _potentialInteractions.First;
 		while (currentNode != null)
@@ -123,21 +136,26 @@ public class InteractionManager : MonoBehaviour
 				_potentialInteractions.Remove(currentNode);
 				break;
 			}
+
 			currentNode = currentNode.Next;
 		}
 
 		RequestUpdateUI(_potentialInteractions.Count > 0);
 	}
 
-	private void RequestUpdateUI(bool visible)
+	void RequestUpdateUI(bool visible)
 	{
 		if (visible)
+		{
 			_toggleInteractionUI.RaiseEvent(true, _potentialInteractions.First.Value.type);
+		}
 		else
+		{
 			_toggleInteractionUI.RaiseEvent(false, InteractionType.None);
+		}
 	}
 
-	private void OnInteractionEnd()
+	void OnInteractionEnd()
 	{
 		switch (currentInteractionType)
 		{

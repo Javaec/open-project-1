@@ -30,7 +30,7 @@ public class Critter : MonoBehaviour
 		//a target exited the Attack zone (inner) but stayed in the Alert zone (outer).
 	}
 
-	private void OnTargetDead()
+	void OnTargetDead()
 	{
 		currentTarget = null;
 		isPlayerInAlertZone = false;

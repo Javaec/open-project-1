@@ -8,16 +8,33 @@ using UOP1.StateMachine.ScriptableObjects;
 [CreateAssetMenu(fileName = "StopMovementAction", menuName = "State Machines/Actions/Stop Movement")]
 public class StopMovementActionSO : StateActionSO
 {
-	[SerializeField] private StateAction.SpecificMoment _moment = default;
-	public StateAction.SpecificMoment Moment => _moment;
+	[SerializeField] StateAction.SpecificMoment _moment = default;
 
-	protected override StateAction CreateAction() => new StopMovement();
+	public StateAction.SpecificMoment Moment
+	{
+		get
+		{
+			return _moment;
+		}
+	}
+
+	protected override StateAction CreateAction()
+	{
+		return new StopMovement();
+	}
 }
 
 public class StopMovement : StateAction
 {
-	private Protagonist _protagonist;
-	private new StopMovementActionSO OriginSO => (StopMovementActionSO)base.OriginSO;
+	Protagonist _protagonist;
+
+	new StopMovementActionSO OriginSO
+	{
+		get
+		{
+			return (StopMovementActionSO)base.OriginSO;
+		}
+	}
 
 	public override void Awake(StateMachine stateMachine)
 	{
@@ -27,18 +44,24 @@ public class StopMovement : StateAction
 	public override void OnUpdate()
 	{
 		if (OriginSO.Moment == SpecificMoment.OnUpdate)
+		{
 			_protagonist.movementVector = Vector3.zero;
+		}
 	}
 
 	public override void OnStateEnter()
 	{
 		if (OriginSO.Moment == SpecificMoment.OnStateEnter)
+		{
 			_protagonist.movementVector = Vector3.zero;
+		}
 	}
 
 	public override void OnStateExit()
 	{
 		if (OriginSO.Moment == SpecificMoment.OnStateExit)
+		{
 			_protagonist.movementVector = Vector3.zero;
+		}
 	}
 }

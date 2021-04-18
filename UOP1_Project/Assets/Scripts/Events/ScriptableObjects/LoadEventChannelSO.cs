@@ -19,8 +19,8 @@ public class LoadEventChannelSO : EventChannelBaseSO
 		else
 		{
 			Debug.LogWarning("A Scene loading was requested, but nobody picked it up. " +
-				"Check why there is no SceneLoader already present, " +
-				"and make sure it's listening on this Load Event channel.");
+			                 "Check why there is no SceneLoader already present, " +
+			                 "and make sure it's listening on this Load Event channel.");
 		}
 	}
 }

@@ -7,9 +7,12 @@ using UnityEngine.Events;
 public class DialogueChoiceChannelSO : ScriptableObject
 {
 	public UnityAction<Choice> OnEventRaised;
+
 	public void RaiseEvent(Choice choice)
 	{
 		if (OnEventRaised != null)
+		{
 			OnEventRaised.Invoke(choice);
+		}
 	}
 }

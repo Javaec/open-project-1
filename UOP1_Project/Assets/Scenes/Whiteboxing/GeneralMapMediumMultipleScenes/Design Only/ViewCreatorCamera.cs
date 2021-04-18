@@ -6,7 +6,7 @@ using UnityEditor;
 
 public class ViewCreatorCamera : MonoBehaviour
 {
-	public string targetTexturePath;//path in Assets folder where image is to be stored
+	public string targetTexturePath; //path in Assets folder where image is to be stored
 
 	public void captureView()
 	{

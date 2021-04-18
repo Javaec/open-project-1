@@ -5,13 +5,16 @@ using UOP1.StateMachine.ScriptableObjects;
 [CreateAssetMenu(fileName = "ClearInputCache_OnEnter", menuName = "State Machines/Actions/Clear Input Cache On Enter")]
 public class ClearInputCache_OnEnterSO : StateActionSO
 {
-	protected override StateAction CreateAction() => new ClearInputCache_OnEnter();
+	protected override StateAction CreateAction()
+	{
+		return new ClearInputCache_OnEnter();
+	}
 }
 
 public class ClearInputCache_OnEnter : StateAction
 {
-	private Protagonist _protagonist;
-	private InteractionManager _interactionManager;
+	Protagonist _protagonist;
+	InteractionManager _interactionManager;
 
 	public override void Awake(StateMachine stateMachine)
 	{

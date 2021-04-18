@@ -18,9 +18,13 @@ public class CustomBaseEditor : Editor
 
 		//Draw reference information about script being edited
 		if (typeof(ScriptableObject).IsAssignableFrom(typeof(T)))
+		{
 			EditorGUILayout.ObjectField("Script", MonoScript.FromScriptableObject((ScriptableObject)target), typeof(T), false);
+		}
 		else if (typeof(MonoBehaviour).IsAssignableFrom(typeof(T)))
+		{
 			EditorGUILayout.ObjectField("Script", MonoScript.FromMonoBehaviour((MonoBehaviour)target), typeof(T), false);
+		}
 
 		//Make GUI editable
 		GUI.enabled = true;

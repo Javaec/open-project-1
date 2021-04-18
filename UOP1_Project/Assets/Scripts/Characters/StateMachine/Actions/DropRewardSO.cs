@@ -5,13 +5,16 @@ using UOP1.StateMachine.ScriptableObjects;
 [CreateAssetMenu(fileName = "DropReward", menuName = "State Machines/Actions/Drop Reward")]
 public class DropRewardSO : StateActionSO
 {
-	protected override StateAction CreateAction() => new DropReward();
+	protected override StateAction CreateAction()
+	{
+		return new DropReward();
+	}
 }
 
 public class DropReward : StateAction
 {
-	private DroppableRewardConfigSO _dropRewardConfig;
-	private Transform _currentTransform;
+	DroppableRewardConfigSO _dropRewardConfig;
+	Transform _currentTransform;
 
 	public override void Awake(StateMachine stateMachine)
 	{
@@ -21,7 +24,6 @@ public class DropReward : StateAction
 
 	public override void OnUpdate()
 	{
-
 	}
 
 	public override void OnStateEnter()
@@ -29,7 +31,7 @@ public class DropReward : StateAction
 		DropAllRewards(_currentTransform.position);
 	}
 
-	private void DropAllRewards(Vector3 postion)
+	void DropAllRewards(Vector3 postion)
 	{
 		// Drop items
 		foreach (DropGroup dropGroup in _dropRewardConfig.DropGroups)
@@ -46,7 +48,7 @@ public class DropReward : StateAction
 		}
 	}
 
-	private void DropOneReward(DropGroup dropGroup, Vector3 postion)
+	void DropOneReward(DropGroup dropGroup, Vector3 postion)
 	{
 		float dropDice = Random.value;
 		float _currentRate = 0.0f;
@@ -66,7 +68,7 @@ public class DropReward : StateAction
 		}
 
 		float randAngle = Random.value * Mathf.PI * 2;
-		GameObject collectibleItem = GameObject.Instantiate(itemPrefab,
+		GameObject collectibleItem = Object.Instantiate(itemPrefab,
 			postion + itemPrefab.transform.localPosition +
 			_dropRewardConfig.ScatteringDistance * (Mathf.Cos(randAngle) * Vector3.forward + Mathf.Sin(randAngle) * Vector3.right),
 			Quaternion.identity);

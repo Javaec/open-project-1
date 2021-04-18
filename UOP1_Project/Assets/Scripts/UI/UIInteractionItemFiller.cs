@@ -15,6 +15,5 @@ public class UIInteractionItemFiller : MonoBehaviour
 	{
 		_interactionName.StringReference = interactionItem.InteractionName;
 		_interactionKeyButton.text = KeyCode.E.ToString(); // this keycode will be modified later on 
-
 	}
 }

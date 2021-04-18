@@ -10,38 +10,71 @@ using static UnityEngine.Application;
 
 namespace UOP1.EditorTools.Replacer
 {
-	internal class ReplacePrefabSearchPopup : EditorWindow
+	class ReplacePrefabSearchPopup : EditorWindow
 	{
-		private const float previewHeight = 128;
+		const float previewHeight = 128;
 
-		private class ViewState : ScriptableObject
+		class ViewState : ScriptableObject
 		{
 			public TreeViewState treeViewState = new TreeViewState();
 		}
 
-		private static ReplacePrefabSearchPopup window;
-		private static Styles styles;
+		static ReplacePrefabSearchPopup window;
+		static Styles styles;
 
-		private static Event evt => Event.current;
-		private static string assetPath => Path.Combine(dataPath.Remove(dataPath.Length - 7, 7), "Library", "ReplacePrefabTreeState.asset");
+		static Event evt
+		{
+			get
+			{
+				return Event.current;
+			}
+		}
 
-		private bool hasSelection => tree.state.selectedIDs.Count > 0;
-		private int selectedId => tree.state.selectedIDs[0];
-		private GameObject instance => EditorUtility.InstanceIDToObject(selectedId) as GameObject;
+		static string assetPath
+		{
+			get
+			{
+				return Path.Combine(dataPath.Remove(dataPath.Length - 7, 7), "Library", "ReplacePrefabTreeState.asset");
+			}
+		}
 
-		private SearchField searchField;
-		private PrefabSelectionTreeView tree;
-		private ViewState viewState;
+		bool hasSelection
+		{
+			get
+			{
+				return tree.state.selectedIDs.Count > 0;
+			}
+		}
 
-		private Vector2 startPos;
-		private Vector2 startSize;
-		private Vector2 lastSize;
+		int selectedId
+		{
+			get
+			{
+				return tree.state.selectedIDs[0];
+			}
+		}
 
-		private GameObjectPreview selectionPreview = new GameObjectPreview();
+		GameObject instance
+		{
+			get
+			{
+				return EditorUtility.InstanceIDToObject(selectedId) as GameObject;
+			}
+		}
+
+		SearchField searchField;
+		PrefabSelectionTreeView tree;
+		ViewState viewState;
+
+		Vector2 startPos;
+		Vector2 startSize;
+		Vector2 lastSize;
+
+		GameObjectPreview selectionPreview = new GameObjectPreview();
 
 		public static void Show(Rect rect)
 		{
-			var windows = Resources.FindObjectsOfTypeAll<ReplacePrefabSearchPopup>();
+			ReplacePrefabSearchPopup[] windows = Resources.FindObjectsOfTypeAll<ReplacePrefabSearchPopup>();
 			window = windows.Length != 0 ? windows[0] : CreateInstance<ReplacePrefabSearchPopup>();
 
 			window.Init();
@@ -59,12 +92,14 @@ namespace UOP1.EditorTools.Replacer
 			//onSelectEntry += _ => window.Close();
 		}
 
-		private void Init()
+		void Init()
 		{
 			viewState = CreateInstance<ViewState>();
 
 			if (File.Exists(assetPath))
+			{
 				FromJsonOverwrite(File.ReadAllText(assetPath), viewState);
+			}
 
 			tree = new PrefabSelectionTreeView(viewState.treeViewState);
 			tree.onSelectEntry += OnSelectEntry;
@@ -76,17 +111,17 @@ namespace UOP1.EditorTools.Replacer
 			searchField.SetFocus();
 		}
 
-		private void OnSelectEntry(GameObject prefab)
+		void OnSelectEntry(GameObject prefab)
 		{
 			ReplaceTool.ReplaceSelectedObjects(Selection.gameObjects, prefab);
 		}
 
-		private void OnEnable()
+		void OnEnable()
 		{
 			Init();
 		}
 
-		private void OnDisable()
+		void OnDisable()
 		{
 			tree.Cleanup();
 		}
@@ -97,26 +132,34 @@ namespace UOP1.EditorTools.Replacer
 			base.Close();
 		}
 
-		private void SaveState()
+		void SaveState()
 		{
 			File.WriteAllText(assetPath, ToJson(viewState));
 		}
 
-		private void OnGUI()
+		void OnGUI()
 		{
 			if (evt.type == EventType.KeyDown && evt.keyCode == KeyCode.Escape)
 			{
 				if (tree.hasSearch)
+				{
 					tree.searchString = "";
+				}
 				else
+				{
 					Close();
+				}
 			}
 
 			if (focusedWindow != this)
+			{
 				Close();
+			}
 
 			if (styles == null)
+			{
 				styles = new Styles();
+			}
 
 			DoToolbar();
 			DoTreeView();
@@ -132,7 +175,7 @@ namespace UOP1.EditorTools.Replacer
 
 		void DoTreeView()
 		{
-			var rect = GUILayoutUtility.GetRect(0, 10000, 0, 10000);
+			Rect rect = GUILayoutUtility.GetRect(0, 10000, 0, 10000);
 			rect.x += 2;
 			rect.width -= 4;
 
@@ -147,7 +190,7 @@ namespace UOP1.EditorTools.Replacer
 			if (hasSelection && tree.IsRenderable(selectedId))
 			{
 				SetSize(startSize.x, startSize.y + previewHeight);
-				var previewRect = GUILayoutUtility.GetRect(position.width, previewHeight);
+				Rect previewRect = GUILayoutUtility.GetRect(position.width, previewHeight);
 
 				selectionPreview.CreatePreviewForTarget(instance);
 				selectionPreview.RenderInteractivePreview(previewRect);
@@ -160,17 +203,21 @@ namespace UOP1.EditorTools.Replacer
 			}
 		}
 
-		private void SetInitialSize()
+		void SetInitialSize()
 		{
 			if (hasSelection && tree.IsRenderable(selectedId))
+			{
 				SetSize(startSize.x, startSize.y + previewHeight);
+			}
 			else
+			{
 				SetSize(startSize.x, startSize.y);
+			}
 		}
 
-		private void SetSize(float width, float height)
+		void SetSize(float width, float height)
 		{
-			var newSize = new Vector2(width, height);
+			Vector2 newSize = new Vector2(width, height);
 			if (newSize != lastSize)
 			{
 				lastSize = newSize;
@@ -178,7 +225,7 @@ namespace UOP1.EditorTools.Replacer
 			}
 		}
 
-		private class Styles
+		class Styles
 		{
 			public GUIStyle headerLabel = new GUIStyle(EditorStyles.centeredGreyMiniLabel)
 			{

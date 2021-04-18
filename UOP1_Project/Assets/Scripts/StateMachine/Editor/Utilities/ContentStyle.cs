@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace UOP1.StateMachine.Editor
 {
-	internal static class ContentStyle
+	static class ContentStyle
 	{
 		internal static Color DarkGray { get; private set; }
 		internal static Color LightGray { get; private set; }
@@ -18,13 +18,15 @@ namespace UOP1.StateMachine.Editor
 		internal static GUIStyle WithPadding { get; private set; }
 		internal static GUIStyle WithPaddingAndMargins { get; private set; }
 
-		private static bool _initialised = false;
+		static bool _initialised = false;
 
 		[InitializeOnLoadMethod]
 		internal static void Initialize()
 		{
 			if (_initialised)
+			{
 				return;
+			}
 
 			_initialised = true;
 
@@ -36,15 +38,15 @@ namespace UOP1.StateMachine.Editor
 			Padding = new RectOffset(5, 5, 5, 5);
 			LeftPadding = new RectOffset(10, 0, 0, 0);
 			Margin = new RectOffset(8, 8, 8, 8);
-			WithPadding = new GUIStyle { padding = Padding };
-			WithPaddingAndMargins = new GUIStyle { padding = Padding, margin = Margin };
+			WithPadding = new GUIStyle {padding = Padding};
+			WithPaddingAndMargins = new GUIStyle {padding = Padding, margin = Margin};
 
 			//Prepare a modification of the GUIStyleState to feed into the GUIStyle, for the text colour
 			GUIStyleState guiStyleStateNormal = EditorGUIUtility.GetBuiltinSkin(EditorSkin.Inspector).label.normal;
 			//bright text for Professional skin, dark text for Personal skin
 			guiStyleStateNormal.textColor = EditorGUIUtility.isProSkin ? new Color(.85f, .85f, .85f) : new Color(0.337f, 0.337f, 0.337f);
 
-			BoldCentered = new GUIStyle { fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleCenter };
+			BoldCentered = new GUIStyle {fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleCenter};
 			StateListStyle = new GUIStyle
 			{
 				alignment = TextAnchor.MiddleLeft,
@@ -52,7 +54,7 @@ namespace UOP1.StateMachine.Editor
 				fontStyle = FontStyle.Bold,
 				fontSize = 12,
 				margin = Margin,
-				normal = guiStyleStateNormal,
+				normal = guiStyleStateNormal
 			};
 		}
 	}

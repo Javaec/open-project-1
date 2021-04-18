@@ -12,8 +12,15 @@ public class HorizontalMoveActionSO : StateActionSO<HorizontalMoveAction>
 public class HorizontalMoveAction : StateAction
 {
 	//Component references
-	private Protagonist _protagonistScript;
-	private HorizontalMoveActionSO _originSO => (HorizontalMoveActionSO)base.OriginSO; // The SO this StateAction spawned from
+	Protagonist _protagonistScript;
+
+	HorizontalMoveActionSO _originSO
+	{
+		get
+		{
+			return (HorizontalMoveActionSO)OriginSO; // The SO this StateAction spawned from
+		}
+	}
 
 	public override void Awake(StateMachine stateMachine)
 	{

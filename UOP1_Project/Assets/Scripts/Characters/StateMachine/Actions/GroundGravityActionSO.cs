@@ -12,9 +12,15 @@ public class GroundGravityActionSO : StateActionSO<GroundGravityAction>
 public class GroundGravityAction : StateAction
 {
 	//Component references
-	private Protagonist _protagonistScript;
+	Protagonist _protagonistScript;
 
-	private GroundGravityActionSO _originSO => (GroundGravityActionSO)base.OriginSO; // The SO this StateAction spawned from
+	GroundGravityActionSO _originSO
+	{
+		get
+		{
+			return (GroundGravityActionSO)OriginSO; // The SO this StateAction spawned from
+		}
+	}
 
 	public override void Awake(StateMachine stateMachine)
 	{

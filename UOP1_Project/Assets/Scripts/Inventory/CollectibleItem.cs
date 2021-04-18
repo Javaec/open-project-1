@@ -4,32 +4,31 @@ using UnityEngine;
 
 public class CollectibleItem : MonoBehaviour
 {
+	[SerializeField] Item _currentItem = default;
+	[SerializeField] SpriteRenderer[] _itemImages = default;
 
-	[SerializeField] private Item _currentItem = default;
-	[SerializeField] private SpriteRenderer[] _itemImages = default;
-	private void Start()
+	void Start()
 	{
 		if (_itemImages != null)
+		{
 			SetCubeItem();
+		}
 	}
 
 	public void PickedItem()
 	{
-
-
 	}
 
 	public Item GetItem()
 	{
-
 		return _currentItem;
-
 	}
+
 	public void SetItem(Item item)
 	{
 		_currentItem = item;
-
 	}
+
 	//this function is only for testing 
 	public void SetCubeItem()
 	{
@@ -37,7 +36,5 @@ public class CollectibleItem : MonoBehaviour
 		{
 			_itemImages[i].sprite = _currentItem.PreviewImage;
 		}
-
 	}
-
 }

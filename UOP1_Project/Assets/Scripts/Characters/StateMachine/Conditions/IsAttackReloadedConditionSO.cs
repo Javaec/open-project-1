@@ -7,13 +7,16 @@ using UOP1.StateMachine.ScriptableObjects;
 [CreateAssetMenu(fileName = "IsAttackReloadedCondition", menuName = "State Machines/Conditions/Is Attack Reloaded")]
 public class IsAttackReloadedConditionSO : StateConditionSO
 {
-	protected override Condition CreateCondition() => new IsAttackReloadedCondition();
+	protected override Condition CreateCondition()
+	{
+		return new IsAttackReloadedCondition();
+	}
 }
 
 public class IsAttackReloadedCondition : Condition
 {
-	private float _startTime;
-	private float _reloadDuration;
+	float _startTime;
+	float _reloadDuration;
 
 	public override void Awake(StateMachine stateMachine)
 	{

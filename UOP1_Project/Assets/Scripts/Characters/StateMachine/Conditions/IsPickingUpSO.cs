@@ -3,12 +3,14 @@ using UOP1.StateMachine;
 using UOP1.StateMachine.ScriptableObjects;
 
 [CreateAssetMenu(menuName = "State Machines/Conditions/Is Picking Up")]
-public class IsPickingUpSO : StateConditionSO<IsPickingUpCondition> { }
+public class IsPickingUpSO : StateConditionSO<IsPickingUpCondition>
+{
+}
 
 public class IsPickingUpCondition : Condition
 {
 	//Component references
-	private InteractionManager _interactScript;
+	InteractionManager _interactScript;
 
 	public override void Awake(StateMachine stateMachine)
 	{

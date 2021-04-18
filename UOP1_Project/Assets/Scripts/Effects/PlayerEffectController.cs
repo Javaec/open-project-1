@@ -15,7 +15,7 @@ public class PlayerEffectController : MonoBehaviour
 	[SerializeField] ParticleSystem _slashEffect = default;
 	[SerializeField] ParticleSystem _reverseSlashEffect = default;
 
-	private void Start()
+	void Start()
 	{
 		_slashEffect.Stop();
 		_reverseSlashEffect.Stop();
@@ -35,6 +35,7 @@ public class PlayerEffectController : MonoBehaviour
 	{
 		_jumpParticles.Play();
 	}
+
 	public void PlayLandParticles()
 	{
 		_landParticles.Play();
@@ -74,7 +75,7 @@ public class PlayerEffectController : MonoBehaviour
 		// Note: We don't necessarily need to reset the curve, as it will be overridden
 	}
 
-	private IEnumerator ResetMinMaxCurve(ParticleSystem ps, ParticleSystem.MinMaxCurve curve)
+	IEnumerator ResetMinMaxCurve(ParticleSystem ps, ParticleSystem.MinMaxCurve curve)
 	{
 		while (ps.isEmitting)
 		{

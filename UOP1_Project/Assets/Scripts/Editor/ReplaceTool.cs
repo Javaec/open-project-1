@@ -11,25 +11,30 @@ using UnityEditor;
 public class ReplaceTool : EditorWindow
 {
 	ReplaceData data;
+
 	SerializedObject serializedData;
+
 	// Prefab variable from data object. Using SerializedProperty for integrated Undo
 	SerializedProperty replaceObjectField;
+
 	// Scroll position for list of selected objects
 	Vector2 selectObjectScrollPosition;
 
-	private void InitDataIfNeeded()
+	void InitDataIfNeeded()
 	{
 		if (!data)
 		{
-			data = ScriptableObject.CreateInstance<ReplaceData>();
+			data = CreateInstance<ReplaceData>();
 			serializedData = null;
 		}
+
 		// If data was not wrapped into SerializedObject, wrap it
 		if (serializedData == null)
 		{
 			serializedData = new SerializedObject(data);
 			replaceObjectField = null;
 		}
+
 		// If prefab field was not assigned as SerializedProperty, assign it
 		if (replaceObjectField == null)
 		{
@@ -41,11 +46,11 @@ public class ReplaceTool : EditorWindow
 	[MenuItem("ChopChop/Replace with Prefab")]
 	public static void ShowWindow()
 	{
-		var window = GetWindow<ReplaceTool>();
+		ReplaceTool window = GetWindow<ReplaceTool>();
 		window.Show();
 	}
 
-	private void OnGUI()
+	void OnGUI()
 	{
 		InitDataIfNeeded();
 		EditorGUILayout.Separator();
@@ -73,11 +78,12 @@ public class ReplaceTool : EditorWindow
 		GUI.enabled = false;
 		if (data && data.objectsToReplace != null)
 		{
-			foreach (var go in data.objectsToReplace)
+			foreach (GameObject go in data.objectsToReplace)
 			{
 				EditorGUILayout.ObjectField(go, typeof(GameObject), true);
 			}
 		}
+
 		GUI.enabled = true;
 
 		EditorGUILayout.EndScrollView();
@@ -92,28 +98,30 @@ public class ReplaceTool : EditorWindow
 				Debug.LogErrorFormat("{0}", "No prefab to replace with!");
 				return;
 			}
+
 			// Check if there are objects to replace.
 			if (data.objectsToReplace.Length == 0)
 			{
 				Debug.LogErrorFormat("{0}", "No objects to replace!");
 				return;
 			}
-			ReplaceSelectedObjects(data.objectsToReplace, data.replacementPrefab);
 
+			ReplaceSelectedObjects(data.objectsToReplace, data.replacementPrefab);
 		}
 
 		EditorGUILayout.Separator();
 		serializedData.ApplyModifiedProperties();
-
 	}
-	private void OnInspectorUpdate()
+
+	void OnInspectorUpdate()
 	{
 		if (serializedData != null && serializedData.UpdateIfRequiredOrScript())
 		{
-			this.Repaint();
+			Repaint();
 		}
 	}
-	private void OnSelectionChange()
+
+	void OnSelectionChange()
 	{
 		InitDataIfNeeded();
 		SelectionMode objectFilter = SelectionMode.Unfiltered ^ ~(SelectionMode.Assets | SelectionMode.DeepAssets | SelectionMode.Deep);
@@ -121,7 +129,7 @@ public class ReplaceTool : EditorWindow
 		data.objectsToReplace = selection.Select(s => s.gameObject).ToArray();
 		if (serializedData.UpdateIfRequiredOrScript())
 		{
-			this.Repaint();
+			Repaint();
 		}
 	}
 
@@ -132,16 +140,16 @@ public class ReplaceTool : EditorWindow
 	/// <param name="replaceObject">Prefab that will be instantiated in place of the objects to replace.</param>
 	internal static void ReplaceSelectedObjects(GameObject[] objectToReplace, GameObject replaceObject)
 	{
-		var newInstances = new int[objectToReplace.Length];
+		int[] newInstances = new int[objectToReplace.Length];
 
 		for (int i = 0; i < objectToReplace.Length; i++)
 		{
-			var go = objectToReplace[i];
+			GameObject go = objectToReplace[i];
 
 			Undo.RegisterCompleteObjectUndo(go, "Saving game object state");
 
-			var sibling = go.transform.GetSiblingIndex();
-			var inst = (GameObject)PrefabUtility.InstantiatePrefab(replaceObject);
+			int sibling = go.transform.GetSiblingIndex();
+			GameObject inst = (GameObject)PrefabUtility.InstantiatePrefab(replaceObject);
 			newInstances[i] = inst.GetInstanceID();
 
 			inst.transform.position = go.transform.position;
@@ -155,6 +163,7 @@ public class ReplaceTool : EditorWindow
 			{
 				Undo.SetTransformParent(child, inst.transform, "Parent Change");
 			}
+
 			Undo.DestroyObjectImmediate(go);
 		}
 

@@ -10,11 +10,11 @@ using UnityEngine.SceneManagement;
 public class EditorColdStartup : MonoBehaviour
 {
 #if UNITY_EDITOR
-	[SerializeField] private GameSceneSO _thisSceneSO = default;
-	[SerializeField] private GameSceneSO _persistentManagersSO = default;
-	[SerializeField] private AssetReference _loadSceneEventChannel = default;
+	[SerializeField] GameSceneSO _thisSceneSO = default;
+	[SerializeField] GameSceneSO _persistentManagersSO = default;
+	[SerializeField] AssetReference _loadSceneEventChannel = default;
 
-	private void Start()
+	void Start()
 	{
 		if (!SceneManager.GetSceneByName(_persistentManagersSO.sceneReference.editorAsset.name).isLoaded)
 		{
@@ -22,15 +22,15 @@ public class EditorColdStartup : MonoBehaviour
 		}
 	}
 
-	private void LoadEventChannel(AsyncOperationHandle<SceneInstance> obj)
+	void LoadEventChannel(AsyncOperationHandle<SceneInstance> obj)
 	{
 		_loadSceneEventChannel.LoadAssetAsync<LoadEventChannelSO>().Completed += ReloadScene;
 	}
 
-	private void ReloadScene(AsyncOperationHandle<LoadEventChannelSO> obj)
+	void ReloadScene(AsyncOperationHandle<LoadEventChannelSO> obj)
 	{
 		LoadEventChannelSO loadEventChannelSO = (LoadEventChannelSO)_loadSceneEventChannel.Asset;
-		loadEventChannelSO.RaiseEvent(new GameSceneSO[] { _thisSceneSO });
+		loadEventChannelSO.RaiseEvent(new GameSceneSO[] {_thisSceneSO});
 
 		SceneManager.UnloadSceneAsync(_thisSceneSO.sceneReference.editorAsset.name);
 	}

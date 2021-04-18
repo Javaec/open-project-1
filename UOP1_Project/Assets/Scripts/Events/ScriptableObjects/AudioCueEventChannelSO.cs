@@ -24,8 +24,8 @@ public class AudioCueEventChannelSO : EventChannelBaseSO
 		else
 		{
 			Debug.LogWarning("An AudioCue play event was requested, but nobody picked it up. " +
-				"Check why there is no AudioManager already loaded, " +
-				"and make sure it's listening on this AudioCue Event channel.");
+			                 "Check why there is no AudioManager already loaded, " +
+			                 "and make sure it's listening on this AudioCue Event channel.");
 		}
 
 		return audioCueKey;
@@ -42,8 +42,8 @@ public class AudioCueEventChannelSO : EventChannelBaseSO
 		else
 		{
 			Debug.LogWarning("An AudioCue stop event was requested, but nobody picked it up. " +
-				"Check why there is no AudioManager already loaded, " +
-				"and make sure it's listening on this AudioCue Event channel.");
+			                 "Check why there is no AudioManager already loaded, " +
+			                 "and make sure it's listening on this AudioCue Event channel.");
 		}
 
 		return requestSucceed;
@@ -60,8 +60,8 @@ public class AudioCueEventChannelSO : EventChannelBaseSO
 		else
 		{
 			Debug.LogWarning("An AudioCue finish event was requested, but nobody picked it up. " +
-				"Check why there is no AudioManager already loaded, " +
-				"and make sure it's listening on this AudioCue Event channel.");
+			                 "Check why there is no AudioManager already loaded, " +
+			                 "and make sure it's listening on this AudioCue Event channel.");
 		}
 
 		return requestSucceed;
@@ -69,5 +69,7 @@ public class AudioCueEventChannelSO : EventChannelBaseSO
 }
 
 public delegate AudioCueKey AudioCuePlayAction(AudioCueSO audioCue, AudioConfigurationSO audioConfiguration, Vector3 positionInSpace);
+
 public delegate bool AudioCueStopAction(AudioCueKey emitterKey);
+
 public delegate bool AudioCueFinishAction(AudioCueKey emitterKey);

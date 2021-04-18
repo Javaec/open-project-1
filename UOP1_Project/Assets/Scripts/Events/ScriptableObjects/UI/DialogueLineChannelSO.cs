@@ -8,9 +8,12 @@ using UnityEngine.Localization;
 public class DialogueLineChannelSO : ScriptableObject
 {
 	public UnityAction<LocalizedString, ActorSO> OnEventRaised;
+
 	public void RaiseEvent(LocalizedString line, ActorSO actor)
 	{
 		if (OnEventRaised != null)
+		{
 			OnEventRaised.Invoke(line, actor);
+		}
 	}
 }

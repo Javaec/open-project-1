@@ -5,13 +5,12 @@ using UOP1.StateMachine.ScriptableObjects;
 [CreateAssetMenu(menuName = "State Machines/Conditions/NPC Movement Stop Elapsed")]
 public class NPCMovementStopConditionSO : StateConditionSO<NPCMovementStopCondition>
 {
-
 }
 
 public class NPCMovementStopCondition : Condition
 {
-	private float _startTime;
-	private NPCMovement _npcMovement;
+	float _startTime;
+	NPCMovement _npcMovement;
 
 	public override void Awake(StateMachine stateMachine)
 	{
@@ -23,5 +22,8 @@ public class NPCMovementStopCondition : Condition
 		_startTime = Time.time;
 	}
 
-	protected override bool Statement() => Time.time >= _startTime + _npcMovement.NPCMovementConfig.StopDuration;
+	protected override bool Statement()
+	{
+		return Time.time >= _startTime + _npcMovement.NPCMovementConfig.StopDuration;
+	}
 }

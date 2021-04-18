@@ -7,10 +7,10 @@ public class DissolveHelper : MonoBehaviour
 	[SerializeField] ParticleSystem _dissolveParticlesPrefab = default;
 	[SerializeField] float _dissolveDuration = 1f;
 
-	private MeshRenderer _renderer;
-	private ParticleSystem _particules;
+	MeshRenderer _renderer;
+	ParticleSystem _particules;
 
-	private MaterialPropertyBlock _materialPropertyBlock;
+	MaterialPropertyBlock _materialPropertyBlock;
 
 	[ContextMenu("Trigger Dissolve")]
 	public void TriggerDissolve()
@@ -19,20 +19,21 @@ public class DissolveHelper : MonoBehaviour
 		{
 			_materialPropertyBlock = new MaterialPropertyBlock();
 		}
+
 		InitParticleSystem();
 		StartCoroutine(DissolveCoroutine());
 	}
 
 	[ContextMenu("Reset Dissolve")]
-	private void ResetDissolve()
+	void ResetDissolve()
 	{
 		_materialPropertyBlock.SetFloat("_Dissolve", 0);
 		_renderer.SetPropertyBlock(_materialPropertyBlock);
 	}
 
-	private void InitParticleSystem()
+	void InitParticleSystem()
 	{
-		_particules = GameObject.Instantiate(_dissolveParticlesPrefab, transform);
+		_particules = Instantiate(_dissolveParticlesPrefab, transform);
 
 		_renderer = GetComponent<MeshRenderer>();
 		ParticleSystem.ShapeModule shapeModule = _particules.shape;
@@ -58,6 +59,7 @@ public class DissolveHelper : MonoBehaviour
 
 			yield return null;
 		}
-		GameObject.Destroy(_particules.gameObject);
+
+		Destroy(_particules.gameObject);
 	}
 }

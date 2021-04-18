@@ -2,7 +2,8 @@
 using UnityEngine;
 using UOP1.StateMachine;
 
-[CustomEditor(typeof(AnimatorParameterActionSO)), CanEditMultipleObjects]
+[CustomEditor(typeof(AnimatorParameterActionSO))]
+[CanEditMultipleObjects]
 public class AnimatorParameterActionSOEditor : CustomBaseEditor
 {
 	public override void OnInspectorGUI()
@@ -33,7 +34,6 @@ public class AnimatorParameterActionSOEditor : CustomBaseEditor
 			case (int)AnimatorParameterActionSO.ParameterType.Float:
 				EditorGUILayout.PropertyField(serializedObject.FindProperty("floatValue"), new GUIContent("Desired value"));
 				break;
-
 		}
 
 		serializedObject.ApplyModifiedProperties();

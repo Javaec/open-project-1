@@ -6,51 +6,59 @@ using SceneSelectorInternal;
 
 public partial class SceneSelector : EditorWindow
 {
-	private class PreferencesWindow : EditorWindow
+	class PreferencesWindow : EditorWindow
 	{
-		private class Styles
+		class Styles
 		{
 			public GUIStyle itemBorder;
 			public GUIStyle buttonVisibilityOn;
 			public GUIStyle buttonVisibilityOff;
 		}
 
-		private const string kWindowCaption = "Scene Selector Preferences";
-		private const float kHeaderHeight = 0.0f;
-		private const float kItemHeight = 24.0f;
-		private const float kVisibilityButtonSize = 16.0f;
+		const string kWindowCaption = "Scene Selector Preferences";
+		const float kHeaderHeight = 0.0f;
+		const float kItemHeight = 24.0f;
+		const float kVisibilityButtonSize = 16.0f;
 
 		public static float kColorMarkerFieldSize = Mathf.Ceil(Helper.kColorMarkerNormalSize * 1.41f + 8.0f);
-		private static readonly Color kItemBorderColor = new Color(1.0f, 1.0f, 1.0f, 0.16f);
+		static readonly Color kItemBorderColor = new Color(1.0f, 1.0f, 1.0f, 0.16f);
 
-		private SceneSelector _owner;
-		private ColorSelectorWindow _colorSelectorWindow;
-		private ReorderableList _itemsReorderableList;
-		private Styles _styles;
-		private Vector2 _windowScrollPosition;
+		SceneSelector _owner;
+		ColorSelectorWindow _colorSelectorWindow;
+		ReorderableList _itemsReorderableList;
+		Styles _styles;
+		Vector2 _windowScrollPosition;
 
-		private List<Item> items => _owner._storage.items;
+		List<Item> items
+		{
+			get
+			{
+				return _owner._storage.items;
+			}
+		}
 
 		public static PreferencesWindow Open(SceneSelector owner)
 		{
-			var window = GetWindow<PreferencesWindow>(true, kWindowCaption, true);
+			PreferencesWindow window = GetWindow<PreferencesWindow>(true, kWindowCaption, true);
 			window.Init(owner);
 			return window;
 		}
 
-		private void OnEnable()
+		void OnEnable()
 		{
 			wantsMouseMove = true;
 		}
 
-		private void OnDisable()
+		void OnDisable()
 		{
 			_owner.SaveStorage();
 			if (_colorSelectorWindow != null)
+			{
 				_colorSelectorWindow.Close();
+			}
 		}
 
-		private void OnGUI()
+		void OnGUI()
 		{
 			EnsureStyles();
 			Helper.RepaintOnMouseMove(this);
@@ -63,13 +71,13 @@ public partial class SceneSelector : EditorWindow
 			Repaint();
 		}
 
-		private void Init(SceneSelector owner)
+		void Init(SceneSelector owner)
 		{
 			_owner = owner;
 			CreateReorderableList();
 		}
 
-		private void CreateReorderableList()
+		void CreateReorderableList()
 		{
 			_itemsReorderableList = new ReorderableList(items, typeof(Item), true, true, false, false);
 			_itemsReorderableList.drawElementCallback = DrawItem;
@@ -79,9 +87,9 @@ public partial class SceneSelector : EditorWindow
 			_itemsReorderableList.elementHeight = kItemHeight;
 		}
 
-		private void DrawWindow()
+		void DrawWindow()
 		{
-			using (var scrollScope = new EditorGUILayout.ScrollViewScope(_windowScrollPosition))
+			using (EditorGUILayout.ScrollViewScope scrollScope = new EditorGUILayout.ScrollViewScope(_windowScrollPosition))
 			{
 				GUILayout.Space(4.0f);
 				_itemsReorderableList.DoLayoutList();
@@ -89,36 +97,36 @@ public partial class SceneSelector : EditorWindow
 			}
 		}
 
-		private void DrawItem(Rect rect, int index, bool isActive, bool isFocused)
+		void DrawItem(Rect rect, int index, bool isActive, bool isFocused)
 		{
-			var item = items[index];
-			var gameScene = item.gameSceneSO;
+			Item item = items[index];
+			GameSceneSO gameScene = item.gameSceneSO;
 			if (gameScene != null)
 			{
-				var colorMarkerRect = rect;
+				Rect colorMarkerRect = rect;
 				colorMarkerRect.width = colorMarkerRect.height;
 
 				if (Helper.DrawColorMarker(colorMarkerRect, item.color, true, true))
 				{
-					var colorSelectorRect = GUIUtility.GUIToScreenRect(colorMarkerRect);
+					Rect colorSelectorRect = GUIUtility.GUIToScreenRect(colorMarkerRect);
 					_colorSelectorWindow = ColorSelectorWindow.Open(colorSelectorRect, this, item);
 				}
 
-				var itemLabelRect = rect;
+				Rect itemLabelRect = rect;
 				itemLabelRect.x += colorMarkerRect.width;
 				itemLabelRect.width -= kVisibilityButtonSize + colorMarkerRect.width;
 
 				GUI.Label(itemLabelRect, gameScene.name);
 
-				var visibilityButtonRect = new Rect(rect);
+				Rect visibilityButtonRect = new Rect(rect);
 				visibilityButtonRect.width = kVisibilityButtonSize;
 				visibilityButtonRect.height = kVisibilityButtonSize;
 				visibilityButtonRect.x = itemLabelRect.x + itemLabelRect.width;
 				visibilityButtonRect.y += (rect.height - visibilityButtonRect.height) * 0.5f;
 
-				var visibilityStyle = item.isVisible
-				? _styles.buttonVisibilityOn
-				: _styles.buttonVisibilityOff;
+				GUIStyle visibilityStyle = item.isVisible
+					? _styles.buttonVisibilityOn
+					: _styles.buttonVisibilityOff;
 
 				if (GUI.Button(visibilityButtonRect, GUIContent.none, visibilityStyle))
 				{
@@ -128,7 +136,7 @@ public partial class SceneSelector : EditorWindow
 			}
 		}
 
-		private void DrawItemBackground(Rect rect, int index, bool isActive, bool isFocused)
+		void DrawItemBackground(Rect rect, int index, bool isActive, bool isFocused)
 		{
 			ReorderableList.defaultBehaviours.DrawElementBackground(rect, index, isActive, isFocused, true);
 			using (Helper.ReplaceColor.With(kItemBorderColor))
@@ -137,17 +145,17 @@ public partial class SceneSelector : EditorWindow
 			}
 		}
 
-		private void OnReorder(ReorderableList _)
+		void OnReorder(ReorderableList _)
 		{
 			RepaintOwner();
 		}
 
-		private void RepaintOwner()
+		void RepaintOwner()
 		{
 			_owner.Repaint();
 		}
 
-		private void EnsureStyles()
+		void EnsureStyles()
 		{
 			if (_styles == null)
 			{

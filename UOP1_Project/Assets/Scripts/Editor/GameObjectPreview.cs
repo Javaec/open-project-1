@@ -7,26 +7,26 @@ using Object = UnityEngine.Object;
 
 namespace UOP1.EditorTools
 {
-	internal class GameObjectPreview
+	class GameObjectPreview
 	{
-		private static Type gameObjectInspectorType;
-		private static MethodInfo getPreviewDataMethod;
-		private static FieldInfo renderUtilityField;
+		static Type gameObjectInspectorType;
+		static MethodInfo getPreviewDataMethod;
+		static FieldInfo renderUtilityField;
 
-		private Rect renderRect;
-		private Color light0Color;
-		private Color light1Color;
-		private PreviewRenderUtility renderUtility;
+		Rect renderRect;
+		Color light0Color;
+		Color light1Color;
+		PreviewRenderUtility renderUtility;
 
-		private Editor cachedEditor;
+		Editor cachedEditor;
 
 		public RenderTexture outputTexture;
 
 		[InitializeOnLoadMethod]
-		private static void OnInitialize()
+		static void OnInitialize()
 		{
 			gameObjectInspectorType = typeof(Editor).Assembly.GetType("UnityEditor.GameObjectInspector");
-			var previewDataType = gameObjectInspectorType.GetNestedType("PreviewData", BindingFlags.NonPublic);
+			Type previewDataType = gameObjectInspectorType.GetNestedType("PreviewData", BindingFlags.NonPublic);
 
 			getPreviewDataMethod = gameObjectInspectorType.GetMethod("GetPreviewData", BindingFlags.NonPublic | BindingFlags.Instance);
 			renderUtilityField = previewDataType.GetField("renderUtility", BindingFlags.Public | BindingFlags.Instance);
@@ -46,11 +46,13 @@ namespace UOP1.EditorTools
 		public void RenderInteractivePreview(Rect rect)
 		{
 			if (!cachedEditor)
+			{
 				return;
+			}
 
 			if (renderUtility == null || renderUtility.lights[0] == null)
 			{
-				var previewData = getPreviewDataMethod.Invoke(cachedEditor, null);
+				object previewData = getPreviewDataMethod.Invoke(cachedEditor, null);
 				renderUtility = renderUtilityField.GetValue(previewData) as PreviewRenderUtility;
 
 				light0Color = renderUtility.lights[0].color;
@@ -59,11 +61,11 @@ namespace UOP1.EditorTools
 
 			renderUtility.lights[0].color = light0Color * 1.6f;
 			renderUtility.lights[1].color = light1Color * 6f;
-			var backColor = renderUtility.camera.backgroundColor;
+			Color backColor = renderUtility.camera.backgroundColor;
 			renderUtility.camera.backgroundColor = new Color(backColor.r, backColor.g, backColor.b, 0);
 			renderUtility.camera.clearFlags = CameraClearFlags.Depth;
 
-			var color = GUI.color;
+			Color color = GUI.color;
 
 			// Hide default preview texture, since it has no alpha blending
 			GUI.color = new Color(1, 1, 1, 0);
@@ -82,27 +84,39 @@ namespace UOP1.EditorTools
 
 		public static bool HasRenderableParts(GameObject go)
 		{
-			var renderers = go.GetComponentsInChildren<Renderer>();
-			foreach (var renderer in renderers)
+			Renderer[] renderers = go.GetComponentsInChildren<Renderer>();
+			foreach (Renderer renderer in renderers)
 			{
 				switch (renderer)
 				{
 					case MeshRenderer _:
-						var filter = renderer.gameObject.GetComponent<MeshFilter>();
+						MeshFilter filter = renderer.gameObject.GetComponent<MeshFilter>();
 						if (filter && filter.sharedMesh)
+						{
 							return true;
+						}
+
 						break;
 					case SkinnedMeshRenderer skinnedMesh:
 						if (skinnedMesh.sharedMesh)
+						{
 							return true;
+						}
+
 						break;
 					case SpriteRenderer sprite:
 						if (sprite.sprite)
+						{
 							return true;
+						}
+
 						break;
 					case BillboardRenderer billboard:
 						if (billboard.billboard && billboard.sharedMaterial)
+						{
 							return true;
+						}
+
 						break;
 				}
 			}

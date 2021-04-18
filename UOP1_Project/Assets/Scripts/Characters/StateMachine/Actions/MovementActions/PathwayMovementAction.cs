@@ -4,11 +4,11 @@ using UnityEngine.AI;
 
 public class PathwayMovementAction : NPCMovementAction
 {
-	private NavMeshAgent _agent;
-	private bool _isActiveAgent;
-	private List<WaypointData> _wayppoints;
-	private int _wayPointIndex;
-	private float _roamingSpeed;
+	NavMeshAgent _agent;
+	bool _isActiveAgent;
+	List<WaypointData> _wayppoints;
+	int _wayPointIndex;
+	float _roamingSpeed;
 
 	public PathwayMovementAction(
 		PathwayConfigSO config, NavMeshAgent agent)
@@ -22,7 +22,6 @@ public class PathwayMovementAction : NPCMovementAction
 
 	public override void OnUpdate()
 	{
-
 	}
 
 	public override void OnStateEnter()
@@ -37,10 +36,9 @@ public class PathwayMovementAction : NPCMovementAction
 
 	public override void OnStateExit()
 	{
-
 	}
 
-	private Vector3 GetNextDestination()
+	Vector3 GetNextDestination()
 	{
 		Vector3 result = _agent.transform.position;
 		if (_wayppoints.Count > 0)
@@ -48,6 +46,7 @@ public class PathwayMovementAction : NPCMovementAction
 			_wayPointIndex = (_wayPointIndex + 1) % _wayppoints.Count;
 			result = _wayppoints[_wayPointIndex].waypoint;
 		}
+
 		return result;
 	}
 }

@@ -10,17 +10,17 @@ public class AudioConfigApplier : MonoBehaviour
 {
 	public AudioConfigurationSO config;
 
-	private void OnValidate()
+	void OnValidate()
 	{
 		ConfigureAudioSource();
 	}
 
-	private void Start()
+	void Start()
 	{
 		ConfigureAudioSource();
 	}
 
-	private void ConfigureAudioSource()
+	void ConfigureAudioSource()
 	{
 		if (config != null)
 		{

@@ -12,11 +12,18 @@ public class AscendActionSO : StateActionSO<AscendAction>
 public class AscendAction : StateAction
 {
 	//Component references
-	private Protagonist _protagonistScript;
+	Protagonist _protagonistScript;
 
-	private float _verticalMovement;
-	private float _gravityContributionMultiplier;
-	private AscendActionSO _originSO => (AscendActionSO)base.OriginSO; // The SO this StateAction spawned from
+	float _verticalMovement;
+	float _gravityContributionMultiplier;
+
+	AscendActionSO _originSO
+	{
+		get
+		{
+			return (AscendActionSO)OriginSO; // The SO this StateAction spawned from
+		}
+	}
 
 	public override void Awake(StateMachine stateMachine)
 	{

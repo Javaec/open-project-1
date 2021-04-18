@@ -6,7 +6,8 @@ public class TransformAnchor : RuntimeAnchorBase
 {
 	[HideInInspector] public bool isSet = false; // Any script can check if the transform is null before using it, by just checking this bool
 
-	private Transform _transform;
+	Transform _transform;
+
 	public Transform Transform
 	{
 		get { return _transform; }

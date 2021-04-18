@@ -6,44 +6,47 @@ using UnityEngine.Serialization;
 [CreateAssetMenu(fileName = "QuestAnchor", menuName = "Quests/QuestAnchor", order = 51)]
 public class QuestAncorSO : ScriptableObject
 {
-	[Header("Data")]
-	[SerializeField] private List<QuestlineSO> _questlines = default;
-	[SerializeField] private Inventory _inventory = default;
+	[Header("Data")] [SerializeField] List<QuestlineSO> _questlines = default;
+	[SerializeField] Inventory _inventory = default;
 
 
+	[Header("Linstening to channels")] [SerializeField]
+	VoidEventChannelSO _checkStepValidityEvent = default;
 
-	[Header("Linstening to channels")]
-	[SerializeField] private VoidEventChannelSO _checkStepValidityEvent = default;
-	[SerializeField] private DialogueDataChannelSO _endDialogueEvent = default;
+	[SerializeField] DialogueDataChannelSO _endDialogueEvent = default;
 
-	[Header("Broadcasting on channels")]
-	[FormerlySerializedAs("_winDialogueEvent")]
-	[SerializeField] private VoidEventChannelSO _completeDialogueEvent = default;
-	[FormerlySerializedAs("_loseDialogueEvent")]
-	[SerializeField] private VoidEventChannelSO _incompleteDialogueEvent = default;
+	[Header("Broadcasting on channels")] [FormerlySerializedAs("_winDialogueEvent")] [SerializeField]
+	VoidEventChannelSO _completeDialogueEvent = default;
 
-	[SerializeField] private ItemEventChannelSO _giveItemEvent = default;
-	[SerializeField] private ItemEventChannelSO _rewardItemEvent = default;
+	[FormerlySerializedAs("_loseDialogueEvent")] [SerializeField]
+	VoidEventChannelSO _incompleteDialogueEvent = default;
 
-	private QuestSO _currentQuest = null;
-	private QuestlineSO _currentQuestline;
-	private StepSO _currentStep;
-	private int _currentQuestIndex = 0;
-	private int _currentQuestlineIndex = 0;
-	private int _currentStepIndex = 0;
+	[SerializeField] ItemEventChannelSO _giveItemEvent = default;
+	[SerializeField] ItemEventChannelSO _rewardItemEvent = default;
+
+	QuestSO _currentQuest = null;
+	QuestlineSO _currentQuestline;
+	StepSO _currentStep;
+	int _currentQuestIndex = 0;
+	int _currentQuestlineIndex = 0;
+	int _currentStepIndex = 0;
 
 	public void StartGame()
-	{//Add code for saved information
+	{
+		//Add code for saved information
 		if (_checkStepValidityEvent != null)
 		{
 			_checkStepValidityEvent.OnEventRaised += CheckStepValidity;
 		}
+
 		if (_endDialogueEvent != null)
 		{
 			_endDialogueEvent.OnEventRaised += EndDialogue;
 		}
+
 		StartQuestline();
 	}
+
 	void StartQuestline()
 	{
 		if (_questlines != null)
@@ -52,37 +55,36 @@ public class QuestAncorSO : ScriptableObject
 			{
 				_currentQuestlineIndex = _questlines.FindIndex(o => !o.IsDone);
 				if (_currentQuestlineIndex >= 0)
+				{
 					_currentQuestline = _questlines.Find(o => !o.IsDone);
+				}
 			}
-
 		}
 	}
+
 	bool hasStep(ActorSO actorToCheckWith)
 	{
 		if (_currentStep != null)
 		{
-
 			if (_currentStep.Actor == actorToCheckWith)
 			{
 				return true;
 			}
-
 		}
-		return false;
 
+		return false;
 	}
+
 	bool CheckQuestlineForQuestWithActor(ActorSO actorToCheckWith)
 	{
-		if (_currentQuest == null)//check if there's a current quest 
+		if (_currentQuest == null) //check if there's a current quest 
 		{
 			if (_currentQuestline != null)
 			{
-
 				return _currentQuestline.Quests.Exists(o => !o.IsDone && o.Steps != null && o.Steps[0].Actor == actorToCheckWith);
-
 			}
-
 		}
+
 		return false;
 	}
 
@@ -95,39 +97,34 @@ public class QuestAncorSO : ScriptableObject
 			{
 				StartQuest(actor);
 			}
-
 		}
 
 		if (hasStep(actor))
 		{
 			if (isCheckValidity)
 			{
-
 				if (isValid)
 				{
 					return _currentStep.CompleteDialogue;
-
 				}
 				else
 				{
 					return _currentStep.IncompleteDialogue;
-
 				}
-
 			}
 			else
 			{
 				return _currentStep.DialogueBeforeStep;
 			}
-
 		}
-		return null;
 
+		return null;
 	}
+
 	//When Interacting with a character, we ask the quest manager if there's a quest that starts with a step with a certain character
 	void StartQuest(ActorSO actorToCheckWith)
 	{
-		if (_currentQuest != null)//check if there's a current quest 
+		if (_currentQuest != null) //check if there's a current quest 
 		{
 			return;
 		}
@@ -137,32 +134,33 @@ public class QuestAncorSO : ScriptableObject
 			//find quest index
 			_currentQuestIndex = _currentQuestline.Quests.FindIndex(o => !o.IsDone && o.Steps != null && o.Steps[0].Actor == actorToCheckWith);
 
-			if ((_currentQuestline.Quests.Count > _currentQuestIndex) && (_currentQuestIndex >= 0))
+			if (_currentQuestline.Quests.Count > _currentQuestIndex && _currentQuestIndex >= 0)
 			{
 				_currentQuest = _currentQuestline.Quests[_currentQuestIndex];
 				//start Step
 				_currentStepIndex = 0;
 				_currentStepIndex = _currentQuest.Steps.FindIndex(o => o.IsDone == false);
 				if (_currentStepIndex >= 0)
+				{
 					StartStep();
+				}
 			}
 		}
-
 	}
 
 	void StartStep()
 	{
 		if (_currentQuest.Steps != null)
+		{
 			if (_currentQuest.Steps.Count > _currentStepIndex)
 			{
 				_currentStep = _currentQuest.Steps[_currentStepIndex];
-
 			}
-
+		}
 	}
+
 	void CheckStepValidity()
 	{
-
 		if (_currentStep != null)
 		{
 			switch (_currentStep.Type)
@@ -180,6 +178,7 @@ public class QuestAncorSO : ScriptableObject
 						//trigger lose dialogue
 						_incompleteDialogueEvent.RaiseEvent();
 					}
+
 					break;
 				case stepType.giveItem:
 					if (_inventory.Contains(_currentStep.Item))
@@ -191,8 +190,8 @@ public class QuestAncorSO : ScriptableObject
 					{
 						//trigger lose dialogue
 						_incompleteDialogueEvent.RaiseEvent();
-
 					}
+
 					break;
 				case stepType.rewardItem:
 					_rewardItemEvent.RaiseEvent(_currentStep.Item);
@@ -205,27 +204,26 @@ public class QuestAncorSO : ScriptableObject
 					{
 						EndStep();
 					}
+
 					break;
 				case stepType.dialogue:
 					//dialogue has already been played
 					if (_currentStep.CompleteDialogue != null)
 					{
-
 						_completeDialogueEvent.RaiseEvent();
 					}
 					else
 					{
 						EndStep();
 					}
+
 					break;
-
-
 			}
 		}
 	}
+
 	void EndDialogue(DialogueDataSO dialogue)
 	{
-
 		//depending on the dialogue that ended, do something 
 		switch (dialogue.DialogueType)
 		{
@@ -237,16 +235,15 @@ public class QuestAncorSO : ScriptableObject
 				break;
 			default:
 				break;
-
 		}
-
 	}
+
 	void EndStep()
 	{
-
 		_currentStep = null;
 
 		if (_currentQuest != null)
+		{
 			if (_currentQuest.Steps.Count > _currentStepIndex)
 			{
 				_currentQuest.Steps[_currentStepIndex].FinishStep();
@@ -254,23 +251,21 @@ public class QuestAncorSO : ScriptableObject
 				{
 					_currentStepIndex++;
 					StartStep();
-
 				}
 				else
 				{
-
 					EndQuest();
 				}
 			}
-
-
-
+		}
 	}
+
 	void EndQuest()
 	{
-
 		if (_currentQuest != null)
+		{
 			_currentQuest.FinishQuest();
+		}
 
 		_currentQuest = null;
 		_currentQuestIndex = -1;
@@ -279,13 +274,10 @@ public class QuestAncorSO : ScriptableObject
 			if (!_currentQuestline.Quests.Exists(o => !o.IsDone))
 			{
 				EndQuestline();
-
 			}
-
 		}
-
-
 	}
+
 	void EndQuestline()
 	{
 		if (_questlines != null)
@@ -293,20 +285,12 @@ public class QuestAncorSO : ScriptableObject
 			if (_currentQuestline != null)
 			{
 				_currentQuestline.FinishQuestline();
-
 			}
 
 			if (_questlines.Exists(o => o.IsDone))
 			{
 				StartQuestline();
-
 			}
-
 		}
-
-
 	}
 }
-
-
-

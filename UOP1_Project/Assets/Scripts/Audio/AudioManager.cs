@@ -7,40 +7,39 @@ using System;
 
 public class AudioManager : MonoBehaviour
 {
-	[Header("SoundEmitters pool")]
-	[SerializeField] private SoundEmitterFactorySO _factory = default;
-	[SerializeField] private SoundEmitterPoolSO _pool = default;
-	[SerializeField] private int _initialSize = 10;
+	[Header("SoundEmitters pool")] [SerializeField]
+	SoundEmitterFactorySO _factory = default;
 
-	[Header("Listening on channels")]
-	[Tooltip("The SoundManager listens to this event, fired by objects in any scene, to play SFXs")]
-	[SerializeField] private AudioCueEventChannelSO _SFXEventChannel = default;
-	[Tooltip("The SoundManager listens to this event, fired by objects in any scene, to play Music")]
-	[SerializeField] private AudioCueEventChannelSO _musicEventChannel = default;
+	[SerializeField] SoundEmitterPoolSO _pool = default;
+	[SerializeField] int _initialSize = 10;
+
+	[Header("Listening on channels")] [Tooltip("The SoundManager listens to this event, fired by objects in any scene, to play SFXs")] [SerializeField]
+	AudioCueEventChannelSO _SFXEventChannel = default;
+
+	[Tooltip("The SoundManager listens to this event, fired by objects in any scene, to play Music")] [SerializeField]
+	AudioCueEventChannelSO _musicEventChannel = default;
 
 
-	[Header("Audio control")]
-	[SerializeField] private AudioMixer audioMixer = default;
-	[Range(0f, 1f)]
-	[SerializeField] private float _masterVolume = 1f;
-	[Range(0f, 1f)]
-	[SerializeField] private float _musicVolume = 1f;
-	[Range(0f, 1f)]
-	[SerializeField] private float _sfxVolume = 1f;
+	[Header("Audio control")] [SerializeField]
+	AudioMixer audioMixer = default;
 
-	private SoundEmitterVault _soundEmitterVault;
-	private SoundEmitter _musicSoundEmitter;
+	[Range(0f, 1f)] [SerializeField] float _masterVolume = 1f;
+	[Range(0f, 1f)] [SerializeField] float _musicVolume = 1f;
+	[Range(0f, 1f)] [SerializeField] float _sfxVolume = 1f;
 
-	private void Awake()
+	SoundEmitterVault _soundEmitterVault;
+	SoundEmitter _musicSoundEmitter;
+
+	void Awake()
 	{
 		//TODO: Get the initial volume levels from the settings
 		_soundEmitterVault = new SoundEmitterVault();
 
 		_pool.Prewarm(_initialSize);
-		_pool.SetParent(this.transform);
+		_pool.SetParent(transform);
 	}
 
-	private void OnEnable()
+	void OnEnable()
 	{
 		_SFXEventChannel.OnAudioCuePlayRequested += PlayAudioCue;
 		_SFXEventChannel.OnAudioCueStopRequested += StopAudioCue;
@@ -50,7 +49,7 @@ public class AudioManager : MonoBehaviour
 		_musicEventChannel.OnAudioCueStopRequested += StopMusic;
 	}
 
-	private void OnDestroy()
+	void OnDestroy()
 	{
 		_SFXEventChannel.OnAudioCuePlayRequested -= PlayAudioCue;
 		_SFXEventChannel.OnAudioCueStopRequested -= StopAudioCue;
@@ -77,7 +76,9 @@ public class AudioManager : MonoBehaviour
 	{
 		bool volumeSet = audioMixer.SetFloat(parameterName, NormalizedToMixerValue(normalizedVolume));
 		if (!volumeSet)
+		{
 			Debug.LogError("The AudioMixer parameter was not found");
+		}
 	}
 
 	public float GetGroupVolume(string parameterName)
@@ -95,19 +96,20 @@ public class AudioManager : MonoBehaviour
 
 	// Both MixerValueNormalized and NormalizedToMixerValue functions are used for easier transformations
 	/// when using UI sliders normalized format
-	private float MixerValueToNormalized(float mixerValue)
+	float MixerValueToNormalized(float mixerValue)
 	{
 		// We're assuming the range [-80dB to 0dB] becomes [0 to 1]
-		return 1f + (mixerValue / 80f);
+		return 1f + mixerValue / 80f;
 	}
-	private float NormalizedToMixerValue(float normalizedValue)
+
+	float NormalizedToMixerValue(float normalizedValue)
 	{
 		// We're assuming the range [0 to 1] becomes [-80dB to 0dB]
 		// This doesn't allow values over 0dB
 		return (normalizedValue - 1f) * 80f;
 	}
 
-	private AudioCueKey PlayMusicTrack(AudioCueSO audioCue, AudioConfigurationSO audioConfiguration, Vector3 positionInSpace)
+	AudioCueKey PlayMusicTrack(AudioCueSO audioCue, AudioConfigurationSO audioConfiguration, Vector3 positionInSpace)
 	{
 		float fadeDuration = 2f;
 		float startTime = 0f;
@@ -116,7 +118,9 @@ public class AudioManager : MonoBehaviour
 		{
 			AudioClip songToPlay = audioCue.GetClips()[0];
 			if (_musicSoundEmitter.GetClip() == songToPlay)
+			{
 				return AudioCueKey.Invalid;
+			}
 
 			//Music is already playing, need to fade it out
 			startTime = _musicSoundEmitter.FadeMusicOut(fadeDuration);
@@ -129,7 +133,7 @@ public class AudioManager : MonoBehaviour
 		return AudioCueKey.Invalid; //No need to return a valid key for music
 	}
 
-	private bool StopMusic(AudioCueKey key)
+	bool StopMusic(AudioCueKey key)
 	{
 		if (_musicSoundEmitter != null && _musicSoundEmitter.IsPlaying())
 		{
@@ -137,7 +141,9 @@ public class AudioManager : MonoBehaviour
 			return true;
 		}
 		else
+		{
 			return false;
+		}
 	}
 
 	/// <summary>
@@ -156,7 +162,9 @@ public class AudioManager : MonoBehaviour
 			{
 				soundEmitterArray[i].PlayAudioClip(clipsToPlay[i], settings, audioCue.looping, position);
 				if (!audioCue.looping)
+				{
 					soundEmitterArray[i].OnSoundFinishedPlaying += OnSoundEmitterFinishedPlaying;
+				}
 			}
 		}
 
@@ -200,15 +208,17 @@ public class AudioManager : MonoBehaviour
 		return isFound;
 	}
 
-	private void OnSoundEmitterFinishedPlaying(SoundEmitter soundEmitter)
+	void OnSoundEmitterFinishedPlaying(SoundEmitter soundEmitter)
 	{
 		StopAndCleanEmitter(soundEmitter);
 	}
 
-	private void StopAndCleanEmitter(SoundEmitter soundEmitter)
+	void StopAndCleanEmitter(SoundEmitter soundEmitter)
 	{
 		if (!soundEmitter.IsLooping())
+		{
 			soundEmitter.OnSoundFinishedPlaying -= OnSoundEmitterFinishedPlaying;
+		}
 
 		soundEmitter.Stop();
 		_pool.Return(soundEmitter);
@@ -218,7 +228,7 @@ public class AudioManager : MonoBehaviour
 		//How is the key removed from the vault?
 	}
 
-	private void StopMusicEmitter(SoundEmitter soundEmitter)
+	void StopMusicEmitter(SoundEmitter soundEmitter)
 	{
 		soundEmitter.OnSoundFinishedPlaying -= StopMusicEmitter;
 		_pool.Return(soundEmitter);

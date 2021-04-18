@@ -5,15 +5,18 @@ using UOP1.StateMachine.ScriptableObjects;
 [CreateAssetMenu(fileName = "IsActuallyMoving", menuName = "State Machines/Conditions/Is Actually Moving")]
 public class IsActuallyMovingConditionSO : StateConditionSO
 {
-	[SerializeField] private float _treshold = 0.02f;
+	[SerializeField] float _treshold = 0.02f;
 
-	protected override Condition CreateCondition() => new IsActuallyMovingCondition(_treshold);
+	protected override Condition CreateCondition()
+	{
+		return new IsActuallyMovingCondition(_treshold);
+	}
 }
 
 public class IsActuallyMovingCondition : Condition
 {
-	private float _treshold;
-	private CharacterController _characterController;
+	float _treshold;
+	CharacterController _characterController;
 
 	public override void Awake(StateMachine stateMachine)
 	{

@@ -9,4 +9,3 @@ public class ParticleFactorySO : FactorySO<ParticleSystem>
 		return new GameObject("ParticleSystem").AddComponent<ParticleSystem>();
 	}
 }
-

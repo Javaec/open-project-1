@@ -8,22 +8,45 @@ using UOP1.StateMachine.ScriptableObjects;
 [CreateAssetMenu(fileName = "AerialMovement", menuName = "State Machines/Actions/Aerial Movement")]
 public class AerialMovementActionSO : StateActionSO
 {
-	public float Speed => _speed;
-	public float Acceleration => _acceleration;
+	public float Speed
+	{
+		get
+		{
+			return _speed;
+		}
+	}
 
-	[Tooltip("Desired horizontal movement speed while in the air")]
-	[SerializeField] [Range(0.1f, 100f)] private float _speed = 10f;
-	[Tooltip("The acceleration applied to reach the desired speed")]
-	[SerializeField] [Range(0.1f, 100f)] private float _acceleration = 20f;
+	public float Acceleration
+	{
+		get
+		{
+			return _acceleration;
+		}
+	}
 
-	protected override StateAction CreateAction() => new AerialMovementAction();
+	[Tooltip("Desired horizontal movement speed while in the air")] [SerializeField] [Range(0.1f, 100f)]
+	float _speed = 10f;
+
+	[Tooltip("The acceleration applied to reach the desired speed")] [SerializeField] [Range(0.1f, 100f)]
+	float _acceleration = 20f;
+
+	protected override StateAction CreateAction()
+	{
+		return new AerialMovementAction();
+	}
 }
 
 public class AerialMovementAction : StateAction
 {
-	private new AerialMovementActionSO OriginSO => (AerialMovementActionSO)base.OriginSO;
+	new AerialMovementActionSO OriginSO
+	{
+		get
+		{
+			return (AerialMovementActionSO)base.OriginSO;
+		}
+	}
 
-	private Protagonist _protagonist;
+	Protagonist _protagonist;
 
 	public override void Awake(StateMachine stateMachine)
 	{
@@ -43,7 +66,7 @@ public class AerialMovementAction : StateAction
 		_protagonist.movementVector = velocity;
 	}
 
-	private void SetVelocityPerAxis(ref float currentAxisSpeed, float axisInput, float acceleration, float targetSpeed)
+	void SetVelocityPerAxis(ref float currentAxisSpeed, float axisInput, float acceleration, float targetSpeed)
 	{
 		if (axisInput == 0f)
 		{
@@ -70,12 +93,14 @@ public class AerialMovementAction : StateAction
 		}
 	}
 
-	private void ApplyAirResistance(ref float value)
+	void ApplyAirResistance(ref float value)
 	{
 		float sign = Mathf.Sign(value);
 
 		value -= sign * Protagonist.AIR_RESISTANCE * Time.deltaTime;
 		if (Mathf.Sign(value) != sign)
+		{
 			value = 0;
+		}
 	}
 }

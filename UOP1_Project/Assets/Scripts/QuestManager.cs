@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class QuestManager : MonoBehaviour
 {
+	[SerializeField] QuestAncorSO _questAnchor = default;
 
-	[SerializeField] private QuestAncorSO _questAnchor = default;
 	// Start is called before the first frame update
 	void Start()
 	{
@@ -15,6 +15,5 @@ public class QuestManager : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-
 	}
 }

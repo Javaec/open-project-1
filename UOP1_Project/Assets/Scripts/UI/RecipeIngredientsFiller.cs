@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 public class RecipeIngredientsFiller : MonoBehaviour
 {
-
-	[SerializeField]
-	private List<IngredientFiller> instantiatedGameObjects = new List<IngredientFiller>();
+	[SerializeField] List<IngredientFiller> instantiatedGameObjects = new List<IngredientFiller>();
 
 	public void FillIngredients(List<ItemStack> listofIngredients, bool[] availabilityArray)
 	{
-
 		if (gameObject.GetComponent<VerticalLayoutGroup>() != null)
+		{
 			gameObject.GetComponent<VerticalLayoutGroup>().enabled = true;
+		}
 
 
 		int maxCount = Mathf.Max(listofIngredients.Count, instantiatedGameObjects.Count);
@@ -34,26 +34,24 @@ public class RecipeIngredientsFiller : MonoBehaviour
 
 					instantiatedGameObjects[i].gameObject.SetActive(true);
 				}
-
 			}
 			else if (i < instantiatedGameObjects.Count)
 			{
 				//Desactive
 				instantiatedGameObjects[i].gameObject.SetActive(false);
 			}
-
 		}
 
 		StartCoroutine(waitBeforeDesactiveLayout());
-
 	}
+
 	IEnumerator waitBeforeDesactiveLayout()
 	{
-
-
 		yield return new WaitForSeconds(1);
 		//disable layout group after layout calculation
 		if (gameObject.GetComponent<VerticalLayoutGroup>() != null)
+		{
 			gameObject.GetComponent<VerticalLayoutGroup>().enabled = false;
+		}
 	}
 }

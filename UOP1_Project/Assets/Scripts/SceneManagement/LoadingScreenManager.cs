@@ -4,12 +4,12 @@ public class LoadingScreenManager : MonoBehaviour
 {
 	[Header("Loading screen Event")]
 	//The loading screen event we are listening to
-	[SerializeField] private BoolEventChannelSO _ToggleLoadingScreen = default;
+	[SerializeField]
+	BoolEventChannelSO _ToggleLoadingScreen = default;
 
-	[Header("Loading screen ")]
-	public GameObject loadingInterface;
+	[Header("Loading screen ")] public GameObject loadingInterface;
 
-	private void OnEnable()
+	void OnEnable()
 	{
 		if (_ToggleLoadingScreen != null)
 		{
@@ -17,7 +17,7 @@ public class LoadingScreenManager : MonoBehaviour
 		}
 	}
 
-	private void OnDisable()
+	void OnDisable()
 	{
 		if (_ToggleLoadingScreen != null)
 		{
@@ -25,9 +25,8 @@ public class LoadingScreenManager : MonoBehaviour
 		}
 	}
 
-	private void ToggleLoadingScreen(bool state)
+	void ToggleLoadingScreen(bool state)
 	{
 		loadingInterface.SetActive(state);
 	}
-
 }

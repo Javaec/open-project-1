@@ -8,10 +8,10 @@ namespace UOP1.StateMachine.Editor
 	[CustomEditor(typeof(StateSO))]
 	public class StateEditor : UnityEditor.Editor
 	{
-		private ReorderableList _list;
-		private SerializedProperty _actions;
+		ReorderableList _list;
+		SerializedProperty _actions;
 
-		private void OnEnable()
+		void OnEnable()
 		{
 			Undo.undoRedoPerformed += DoUndo;
 			_actions = serializedObject.FindProperty("_actions");
@@ -19,7 +19,7 @@ namespace UOP1.StateMachine.Editor
 			SetupActionsList(_list);
 		}
 
-		private void OnDisable()
+		void OnDisable()
 		{
 			Undo.undoRedoPerformed -= DoUndo;
 		}
@@ -31,12 +31,12 @@ namespace UOP1.StateMachine.Editor
 			serializedObject.ApplyModifiedProperties();
 		}
 
-		private void DoUndo()
+		void DoUndo()
 		{
 			serializedObject.UpdateIfRequiredOrScript();
 		}
 
-		private static void SetupActionsList(ReorderableList reorderableList)
+		static void SetupActionsList(ReorderableList reorderableList)
 		{
 			reorderableList.elementHeight *= 1.5f;
 			reorderableList.drawHeaderCallback += rect => GUI.Label(rect, "Actions");
@@ -44,21 +44,21 @@ namespace UOP1.StateMachine.Editor
 			{
 				int count = list.count;
 				list.serializedProperty.InsertArrayElementAtIndex(count);
-				var prop = list.serializedProperty.GetArrayElementAtIndex(count);
+				SerializedProperty prop = list.serializedProperty.GetArrayElementAtIndex(count);
 				prop.objectReferenceValue = null;
 			};
 
 			reorderableList.drawElementCallback += (Rect rect, int index, bool isActive, bool isFocused) =>
 			{
-				var r = rect;
+				Rect r = rect;
 				r.height = EditorGUIUtility.singleLineHeight;
 				r.y += 5;
 				r.x += 5;
 
-				var prop = reorderableList.serializedProperty.GetArrayElementAtIndex(index);
+				SerializedProperty prop = reorderableList.serializedProperty.GetArrayElementAtIndex(index);
 				if (prop.objectReferenceValue != null)
 				{
-					var label = prop.objectReferenceValue.name;
+					string label = prop.objectReferenceValue.name;
 					r.width = 35;
 					EditorGUI.PropertyField(r, prop, GUIContent.none);
 					r.width = rect.width - 50;
@@ -66,19 +66,27 @@ namespace UOP1.StateMachine.Editor
 					GUI.Label(r, label, EditorStyles.boldLabel);
 				}
 				else
+				{
 					EditorGUI.PropertyField(r, prop, GUIContent.none);
+				}
 			};
 
 			reorderableList.onChangedCallback += list => list.serializedProperty.serializedObject.ApplyModifiedProperties();
 			reorderableList.drawElementBackgroundCallback += (Rect rect, int index, bool isActive, bool isFocused) =>
 			{
 				if (isFocused)
+				{
 					EditorGUI.DrawRect(rect, ContentStyle.Focused);
+				}
 
 				if (index % 2 != 0)
+				{
 					EditorGUI.DrawRect(rect, ContentStyle.ZebraDark);
+				}
 				else
+				{
 					EditorGUI.DrawRect(rect, ContentStyle.ZebraLight);
+				}
 			};
 		}
 	}

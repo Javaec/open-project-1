@@ -5,9 +5,9 @@ using UnityEngine.EventSystems;
 [AddComponentMenu("UOP1/UI/MultiInputSelectableElement")]
 public class MultiInputSelectableElement : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectHandler
 {
-	private MenuSelectionHandler _menuSelectionHandler;
+	MenuSelectionHandler _menuSelectionHandler;
 
-	private void Awake()
+	void Awake()
 	{
 		_menuSelectionHandler = transform.root.gameObject.GetComponentInChildren<MenuSelectionHandler>();
 	}

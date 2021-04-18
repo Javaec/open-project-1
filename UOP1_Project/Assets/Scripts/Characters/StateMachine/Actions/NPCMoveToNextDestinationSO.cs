@@ -6,15 +6,18 @@ using UOP1.StateMachine.ScriptableObjects;
 [CreateAssetMenu(fileName = "NPCMoveToNextDestination", menuName = "State Machines/Actions/NPC Move To Next Destination")]
 public class NPCMoveToNextDestinationSO : StateActionSO
 {
-	protected override StateAction CreateAction() => new NPCMoveToNextDestination();
+	protected override StateAction CreateAction()
+	{
+		return new NPCMoveToNextDestination();
+	}
 }
 
 public class NPCMoveToNextDestination : StateAction
 {
-	private NPCMovement _npcMovement;
-	private NPCMovementConfigSO _config;
-	private NPCMovementAction _action;
-	private NavMeshAgent _agent;
+	NPCMovement _npcMovement;
+	NPCMovementConfigSO _config;
+	NPCMovementAction _action;
+	NavMeshAgent _agent;
 
 	public override void Awake(StateMachine stateMachine)
 	{
@@ -29,6 +32,7 @@ public class NPCMoveToNextDestination : StateAction
 		{
 			InitMovementStrategy(_npcMovement.NPCMovementConfig);
 		}
+
 		_action.OnStateEnter();
 	}
 
@@ -42,7 +46,7 @@ public class NPCMoveToNextDestination : StateAction
 		_action.OnStateExit();
 	}
 
-	private void InitMovementStrategy(NPCMovementConfigSO config)
+	void InitMovementStrategy(NPCMovementConfigSO config)
 	{
 		_config = config;
 		if (_npcMovement.NPCMovementConfig is RoamingAroundCenterConfigSO)

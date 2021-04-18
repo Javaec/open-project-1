@@ -14,13 +14,15 @@ public class PlayerIsInZoneSO : StateConditionSO
 {
 	public ZoneType zone;
 
-	protected override Condition CreateCondition() => new PlayerIsInZone();
+	protected override Condition CreateCondition()
+	{
+		return new PlayerIsInZone();
+	}
 }
 
 public class PlayerIsInZone : Condition
 {
-
-	private Critter _critter;
+	Critter _critter;
 
 	public override void Awake(StateMachine stateMachine)
 	{
@@ -44,6 +46,7 @@ public class PlayerIsInZone : Condition
 					break;
 			}
 		}
+
 		return result;
 	}
 }

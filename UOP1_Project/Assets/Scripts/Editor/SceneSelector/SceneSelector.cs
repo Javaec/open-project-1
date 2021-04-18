@@ -7,40 +7,56 @@ using SceneType = GameSceneSO.GameSceneType;
 
 public partial class SceneSelector : EditorWindow, IHasCustomMenu
 {
-	private const string kPreferencesKey = "uop1.SceneSelector.Preferences";
-	private const int kItemContentLeftPadding = 32;
-	private static readonly GUIContent kOpenPreferencesItemContent = new GUIContent("Open Preferences");
+	const string kPreferencesKey = "uop1.SceneSelector.Preferences";
+	const int kItemContentLeftPadding = 32;
+	static readonly GUIContent kOpenPreferencesItemContent = new GUIContent("Open Preferences");
 
-	private Styles _styles;
-	private Storage _storage;
-	private PreferencesWindow _preferencesWindow;
-	private Vector2 _windowScrollPosition;
-	private bool _hasEmptyItems;
+	Styles _styles;
+	Storage _storage;
+	PreferencesWindow _preferencesWindow;
+	Vector2 _windowScrollPosition;
+	bool _hasEmptyItems;
 
-	private List<Item> items => _storage.items;
-	private Dictionary<string, Item> itemsMap => _storage.itemsMap;
+	List<Item> items
+	{
+		get
+		{
+			return _storage.items;
+		}
+	}
+
+	Dictionary<string, Item> itemsMap
+	{
+		get
+		{
+			return _storage.itemsMap;
+		}
+	}
 
 	[MenuItem("ChopChop/Scene Selector")]
-	private static void Open()
+	static void Open()
 	{
 		GetWindow<SceneSelector>();
 	}
 
-	private void OnEnable()
+	void OnEnable()
 	{
 		wantsMouseMove = true;
 		LoadStorage();
 		PopulateItems();
 	}
 
-	private void OnDisable()
+	void OnDisable()
 	{
 		if (_preferencesWindow != null)
+		{
 			_preferencesWindow.Close();
+		}
+
 		SaveStorage();
 	}
 
-	private void OnGUI()
+	void OnGUI()
 	{
 		EnsureStyles();
 		Helper.RepaintOnMouseMove(this);
@@ -48,9 +64,9 @@ public partial class SceneSelector : EditorWindow, IHasCustomMenu
 		DrawWindow();
 	}
 
-	private void DrawWindow()
+	void DrawWindow()
 	{
-		using (var scrollScope = new EditorGUILayout.ScrollViewScope(_windowScrollPosition))
+		using (EditorGUILayout.ScrollViewScope scrollScope = new EditorGUILayout.ScrollViewScope(_windowScrollPosition))
 		{
 			GUILayout.Space(4.0f);
 			DrawItems();
@@ -67,19 +83,19 @@ public partial class SceneSelector : EditorWindow, IHasCustomMenu
 		}
 	}
 
-	private void DrawItems()
+	void DrawItems()
 	{
-		foreach (var item in items)
+		foreach (Item item in items)
 		{
 			DrawItem(item);
 		}
 	}
 
-	private void DrawItem(Item item)
+	void DrawItem(Item item)
 	{
 		if (item.isVisible)
 		{
-			var gameSceneSO = item.gameSceneSO;
+			GameSceneSO gameSceneSO = item.gameSceneSO;
 			if (gameSceneSO != null)
 			{
 				if (GUILayout.Button(gameSceneSO.name, _styles.item))
@@ -87,7 +103,7 @@ public partial class SceneSelector : EditorWindow, IHasCustomMenu
 					Helper.OpenSceneSafe(gameSceneSO);
 				}
 
-				var colorMarkerRect = GUILayoutUtility.GetLastRect();
+				Rect colorMarkerRect = GUILayoutUtility.GetLastRect();
 				colorMarkerRect.width = colorMarkerRect.height;
 				colorMarkerRect.x += (_styles.item.padding.left - colorMarkerRect.width) * 0.5f;
 				Helper.DrawColorMarker(colorMarkerRect, item.color);
@@ -100,32 +116,32 @@ public partial class SceneSelector : EditorWindow, IHasCustomMenu
 		}
 	}
 
-	private void LoadStorage()
+	void LoadStorage()
 	{
 		_storage = new Storage();
 		if (EditorPrefs.HasKey(kPreferencesKey))
 		{
-			var preferencesJSON = EditorPrefs.GetString(kPreferencesKey);
+			string preferencesJSON = EditorPrefs.GetString(kPreferencesKey);
 			EditorJsonUtility.FromJsonOverwrite(preferencesJSON, _storage);
 		}
 	}
 
-	private void SaveStorage()
+	void SaveStorage()
 	{
-		var preferencesJSON = EditorJsonUtility.ToJson(_storage);
+		string preferencesJSON = EditorJsonUtility.ToJson(_storage);
 		EditorPrefs.SetString(kPreferencesKey, preferencesJSON);
 	}
 
-	private void PopulateItems()
+	void PopulateItems()
 	{
-		var gameSceneSOs = new List<GameSceneSO>();
+		List<GameSceneSO> gameSceneSOs = new List<GameSceneSO>();
 		Helper.FindAssetsByType(gameSceneSOs);
 
-		foreach (var gameSceneSO in gameSceneSOs)
+		foreach (GameSceneSO gameSceneSO in gameSceneSOs)
 		{
-			if (AssetDatabase.TryGetGUIDAndLocalFileIdentifier(gameSceneSO, out var guid, out long _))
+			if (AssetDatabase.TryGetGUIDAndLocalFileIdentifier(gameSceneSO, out string guid, out long _))
 			{
-				if (itemsMap.TryGetValue(guid, out var item))
+				if (itemsMap.TryGetValue(guid, out Item item))
 				{
 					item.gameSceneSO = gameSceneSO;
 				}
@@ -145,13 +161,13 @@ public partial class SceneSelector : EditorWindow, IHasCustomMenu
 		}
 	}
 
-	private void RemoveEmptyItemsIfRequired()
+	void RemoveEmptyItemsIfRequired()
 	{
 		if (_hasEmptyItems)
 		{
 			for (int i = items.Count - 1; i >= 0; --i)
 			{
-				var sceneItem = items[i];
+				Item sceneItem = items[i];
 				if (sceneItem == null || sceneItem.gameSceneSO == null)
 				{
 					items.RemoveAt(i);
@@ -159,11 +175,12 @@ public partial class SceneSelector : EditorWindow, IHasCustomMenu
 				}
 			}
 		}
+
 		_hasEmptyItems = false;
 	}
 
 
-	private void EnsureStyles()
+	void EnsureStyles()
 	{
 		if (_styles == null)
 		{
@@ -174,7 +191,7 @@ public partial class SceneSelector : EditorWindow, IHasCustomMenu
 		}
 	}
 
-	private void OpenPreferences()
+	void OpenPreferences()
 	{
 		_preferencesWindow = PreferencesWindow.Open(this);
 	}

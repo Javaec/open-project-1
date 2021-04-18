@@ -6,7 +6,7 @@ public static class FileManager
 {
 	public static bool WriteToFile(string fileName, string fileContents)
 	{
-		var fullPath = Path.Combine(Application.persistentDataPath, fileName);
+		string fullPath = Path.Combine(Application.persistentDataPath, fileName);
 
 		try
 		{
@@ -22,7 +22,7 @@ public static class FileManager
 
 	public static bool LoadFromFile(string fileName, out string result)
 	{
-		var fullPath = Path.Combine(Application.persistentDataPath, fileName);
+		string fullPath = Path.Combine(Application.persistentDataPath, fileName);
 
 		try
 		{
@@ -39,8 +39,8 @@ public static class FileManager
 
 	public static bool MoveFile(string fileName, string newFileName)
 	{
-		var fullPath = Path.Combine(Application.persistentDataPath, fileName);
-		var newFullPath = Path.Combine(Application.persistentDataPath, newFileName);
+		string fullPath = Path.Combine(Application.persistentDataPath, fileName);
+		string newFullPath = Path.Combine(Application.persistentDataPath, newFileName);
 
 		try
 		{
@@ -48,6 +48,7 @@ public static class FileManager
 			{
 				File.Delete(newFullPath);
 			}
+
 			File.Move(fullPath, newFullPath);
 		}
 		catch (Exception e)

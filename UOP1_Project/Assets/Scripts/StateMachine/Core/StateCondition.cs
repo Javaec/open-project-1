@@ -7,14 +7,20 @@ namespace UOP1.StateMachine
 	/// </summary>
 	public abstract class Condition : IStateComponent
 	{
-		private bool _isCached = false;
-		private bool _cachedStatement = default;
+		bool _isCached = false;
+		bool _cachedStatement = default;
 		internal StateConditionSO _originSO;
 
 		/// <summary>
 		/// Use this property to access shared data from the <see cref="StateConditionSO"/> that corresponds to this <see cref="Condition"/>
 		/// </summary>
-		protected StateConditionSO OriginSO => _originSO;
+		protected StateConditionSO OriginSO
+		{
+			get
+			{
+				return _originSO;
+			}
+		}
 
 		/// <summary>
 		/// Specify the statement to evaluate.
@@ -46,6 +52,7 @@ namespace UOP1.StateMachine
 		/// </summary>
 		/// <param name="stateMachine">The <see cref="StateMachine"/> this instance belongs to.</param>
 		public virtual void Awake(StateMachine stateMachine) { }
+
 		public virtual void OnStateEnter() { }
 		public virtual void OnStateExit() { }
 	}

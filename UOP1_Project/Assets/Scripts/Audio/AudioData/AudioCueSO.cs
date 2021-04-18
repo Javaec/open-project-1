@@ -8,7 +8,7 @@ using UnityEngine;
 public class AudioCueSO : ScriptableObject
 {
 	public bool looping = false;
-	[SerializeField] private AudioClipsGroup[] _audioClipGroups = default;
+	[SerializeField] AudioClipsGroup[] _audioClipGroups = default;
 
 	public AudioClip[] GetClips()
 	{
@@ -34,8 +34,8 @@ public class AudioClipsGroup
 	public SequenceMode sequenceMode = SequenceMode.RandomNoImmediateRepeat;
 	public AudioClip[] audioClips;
 
-	private int _nextClipToPlay = -1;
-	private int _lastClipPlayed = -1;
+	int _nextClipToPlay = -1;
+	int _lastClipPlayed = -1;
 
 	/// <summary>
 	/// Chooses the next clip in the sequence, either following the order or randomly.
@@ -45,12 +45,14 @@ public class AudioClipsGroup
 	{
 		// Fast out if there is only one clip to play
 		if (audioClips.Length == 1)
+		{
 			return audioClips[0];
+		}
 
 		if (_nextClipToPlay == -1)
 		{
 			// Index needs to be initialised: 0 if Sequential, random if otherwise
-			_nextClipToPlay = (sequenceMode == SequenceMode.Sequential) ? 0 : UnityEngine.Random.Range(0, audioClips.Length);
+			_nextClipToPlay = sequenceMode == SequenceMode.Sequential ? 0 : UnityEngine.Random.Range(0, audioClips.Length);
 		}
 		else
 		{
@@ -66,6 +68,7 @@ public class AudioClipsGroup
 					{
 						_nextClipToPlay = UnityEngine.Random.Range(0, audioClips.Length);
 					} while (_nextClipToPlay == _lastClipPlayed);
+
 					break;
 
 				case SequenceMode.Sequential:
@@ -83,6 +86,6 @@ public class AudioClipsGroup
 	{
 		Random,
 		RandomNoImmediateRepeat,
-		Sequential,
+		Sequential
 	}
 }

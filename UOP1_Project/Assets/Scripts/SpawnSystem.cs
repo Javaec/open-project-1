@@ -4,22 +4,21 @@ using UnityEngine;
 
 public class SpawnSystem : MonoBehaviour
 {
-	[Header("Settings")]
-	[SerializeField] private int _defaultSpawnIndex = 0;
+	[Header("Settings")] [SerializeField] int _defaultSpawnIndex = 0;
 
-	[Header("Asset References")]
-	[SerializeField] private Protagonist _playerPrefab = default;
-	[SerializeField] private TransformAnchor _playerTransformAnchor = default;
-	[SerializeField] private TransformEventChannelSO _playerInstantiatedChannel = default;
-	[SerializeField] private PathAnchor _pathTaken = default;
+	[Header("Asset References")] [SerializeField]
+	Protagonist _playerPrefab = default;
 
-	[Header("Scene References")]
-	private Transform[] _spawnLocations;
+	[SerializeField] TransformAnchor _playerTransformAnchor = default;
+	[SerializeField] TransformEventChannelSO _playerInstantiatedChannel = default;
+	[SerializeField] PathAnchor _pathTaken = default;
 
-	[Header("Scene Ready Event")]
-	[SerializeField] private VoidEventChannelSO _OnSceneReady = default; //Raised when the scene is loaded and set active
+	[Header("Scene References")] Transform[] _spawnLocations;
 
-	private void OnEnable()
+	[Header("Scene Ready Event")] [SerializeField]
+	VoidEventChannelSO _OnSceneReady = default; //Raised when the scene is loaded and set active
+
+	void OnEnable()
 	{
 		if (_OnSceneReady != null)
 		{
@@ -27,7 +26,7 @@ public class SpawnSystem : MonoBehaviour
 		}
 	}
 
-	private void OnDisable()
+	void OnDisable()
 	{
 		if (_OnSceneReady != null)
 		{
@@ -35,7 +34,7 @@ public class SpawnSystem : MonoBehaviour
 		}
 	}
 
-	private void SpawnPlayer()
+	void SpawnPlayer()
 	{
 		GameObject[] spawnLocationsGO = GameObject.FindGameObjectsWithTag("SpawnLocation");
 		_spawnLocations = new Transform[spawnLocationsGO.Length];
@@ -43,6 +42,7 @@ public class SpawnSystem : MonoBehaviour
 		{
 			_spawnLocations[i] = spawnLocationsGO[i].transform;
 		}
+
 		Spawn(FindSpawnIndex(_pathTaken?.Path ?? null));
 	}
 
@@ -55,15 +55,17 @@ public class SpawnSystem : MonoBehaviour
 	/// This function tries to autofill some of the parameters of the component, so it's easy to drop in a new scene
 	/// </summary>
 	[ContextMenu("Attempt Auto Fill")]
-	private void AutoFill()
+	void AutoFill()
 	{
 		if (_spawnLocations == null || _spawnLocations.Length == 0)
+		{
 			_spawnLocations = transform.GetComponentsInChildren<Transform>(true)
-								.Where(t => t != this.transform)
-								.ToArray();
+				.Where(t => t != transform)
+				.ToArray();
+		}
 	}
 
-	private void Spawn(int spawnIndex)
+	void Spawn(int spawnIndex)
 	{
 		Transform spawnLocation = GetSpawnLocation(spawnIndex, _spawnLocations);
 		Protagonist playerInstance = InstantiatePlayer(_playerPrefab, spawnLocation);
@@ -72,31 +74,37 @@ public class SpawnSystem : MonoBehaviour
 		_playerTransformAnchor.Transform = playerInstance.transform;
 	}
 
-	private Transform GetSpawnLocation(int index, Transform[] spawnLocations)
+	Transform GetSpawnLocation(int index, Transform[] spawnLocations)
 	{
 		if (spawnLocations == null || spawnLocations.Length == 0)
+		{
 			throw new Exception("No spawn locations set.");
+		}
 
 		index = Mathf.Clamp(index, 0, spawnLocations.Length - 1);
 		return spawnLocations[index];
 	}
 
-	private int FindSpawnIndex(PathSO pathTaken)
+	int FindSpawnIndex(PathSO pathTaken)
 	{
 		if (pathTaken == null)
+		{
 			return _defaultSpawnIndex;
+		}
 
 		int index = Array.FindIndex(_spawnLocations, element =>
 			element?.GetComponent<LocationEntrance>()?.EntrancePath == pathTaken
 		);
 
-		return (index < 0) ? _defaultSpawnIndex : index;
+		return index < 0 ? _defaultSpawnIndex : index;
 	}
 
-	private Protagonist InstantiatePlayer(Protagonist playerPrefab, Transform spawnLocation)
+	Protagonist InstantiatePlayer(Protagonist playerPrefab, Transform spawnLocation)
 	{
 		if (playerPrefab == null)
+		{
 			throw new Exception("Player Prefab can't be null.");
+		}
 
 		Protagonist playerInstance = Instantiate(playerPrefab, spawnLocation.position, spawnLocation.rotation);
 

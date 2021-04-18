@@ -4,68 +4,77 @@ using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
 {
-
-	[SerializeField] private Inventory _currentInventory = default;
-	[SerializeField] private ItemEventChannelSO _cookRecipeEvent = default;
-	[SerializeField] private ItemEventChannelSO _useItemEvent = default;
-	[SerializeField] private ItemEventChannelSO _equipItemEvent = default;
-	[SerializeField] private ItemEventChannelSO _rewardItemEvent = default;
-	[SerializeField] private ItemEventChannelSO _giveItemEvent = default;
+	[SerializeField] Inventory _currentInventory = default;
+	[SerializeField] ItemEventChannelSO _cookRecipeEvent = default;
+	[SerializeField] ItemEventChannelSO _useItemEvent = default;
+	[SerializeField] ItemEventChannelSO _equipItemEvent = default;
+	[SerializeField] ItemEventChannelSO _rewardItemEvent = default;
+	[SerializeField] ItemEventChannelSO _giveItemEvent = default;
 	[SerializeField] ItemEventChannelSO _addItemEvent = default;
 	[SerializeField] ItemEventChannelSO _removeItemEvent = default;
-	[SerializeField] private SaveSystem _saveSystem;
+	[SerializeField] SaveSystem _saveSystem;
 
-	private void OnEnable()
+	void OnEnable()
 	{
 		//Check if the event exists to avoid errors
 		if (_cookRecipeEvent != null)
 		{
 			_cookRecipeEvent.OnEventRaised += CookRecipeEventRaised;
 		}
+
 		if (_useItemEvent != null)
 		{
 			_useItemEvent.OnEventRaised += UseItemEventRaised;
 		}
+
 		if (_equipItemEvent != null)
 		{
 			_equipItemEvent.OnEventRaised += EquipItemEventRaised;
 		}
+
 		if (_addItemEvent != null)
 		{
 			_addItemEvent.OnEventRaised += AddItem;
 		}
+
 		if (_removeItemEvent != null)
 		{
 			_removeItemEvent.OnEventRaised += RemoveItem;
 		}
+
 		if (_rewardItemEvent != null)
 		{
 			_rewardItemEvent.OnEventRaised += AddItem;
 		}
+
 		if (_giveItemEvent != null)
 		{
 			_giveItemEvent.OnEventRaised += RemoveItem;
 		}
 	}
 
-	private void OnDisable()
+	void OnDisable()
 	{
 		if (_cookRecipeEvent != null)
 		{
 			_cookRecipeEvent.OnEventRaised -= CookRecipeEventRaised;
 		}
+
 		if (_useItemEvent != null)
 		{
 			_useItemEvent.OnEventRaised -= UseItemEventRaised;
 		}
+
 		if (_equipItemEvent != null)
 		{
 			_equipItemEvent.OnEventRaised -= EquipItemEventRaised;
 		}
+
 		if (_addItemEvent != null)
 		{
 			_addItemEvent.OnEventRaised -= AddItem;
 		}
+
 		if (_removeItemEvent != null)
 		{
 			_removeItemEvent.OnEventRaised -= RemoveItem;
@@ -73,12 +82,8 @@ public class InventoryManager : MonoBehaviour
 	}
 
 
-
-
-
 	void AddItemWithUIUpdate(Item item)
 	{
-
 		_currentInventory.Add(item);
 		if (_currentInventory.Contains(item))
 		{
@@ -100,14 +105,14 @@ public class InventoryManager : MonoBehaviour
 
 		bool removeItem = _currentInventory.Contains(item);
 		//	UIManager.Instance.UpdateInventoryScreen(itemToUpdate, removeItem);
-
 	}
+
 	void AddItem(Item item)
 	{
 		_currentInventory.Add(item);
 		_saveSystem.SaveDataToDisk();
-
 	}
+
 	void RemoveItem(Item item)
 	{
 		_currentInventory.Remove(item);
@@ -117,7 +122,6 @@ public class InventoryManager : MonoBehaviour
 
 	void CookRecipeEventRaised(Item recipe)
 	{
-
 		//find recipe
 		if (_currentInventory.Contains(recipe))
 		{
@@ -127,18 +131,16 @@ public class InventoryManager : MonoBehaviour
 			{
 				for (int i = 0; i < ingredients.Count; i++)
 				{
-					if ((ingredients[i].Item.ItemType.ActionType == ItemInventoryActionType.use))
+					if (ingredients[i].Item.ItemType.ActionType == ItemInventoryActionType.use)
+					{
 						_currentInventory.Remove(ingredients[i].Item, ingredients[i].Amount);
+					}
 				}
+
 				//add dish
 				_currentInventory.Add(recipe.ResultingDish);
 			}
-
 		}
-
-
-
-
 	}
 
 	public void UseItemEventRaised(Item item)
@@ -148,7 +150,5 @@ public class InventoryManager : MonoBehaviour
 
 	public void EquipItemEventRaised(Item item)
 	{
-
 	}
 }
-

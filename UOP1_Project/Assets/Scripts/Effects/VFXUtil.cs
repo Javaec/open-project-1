@@ -1,5 +1,4 @@
-﻿
-public class VFXUtil
+﻿public class VFXUtil
 {
 	public static float RemapValue(float value, float low1, float high1, float low2, float high2)
 	{

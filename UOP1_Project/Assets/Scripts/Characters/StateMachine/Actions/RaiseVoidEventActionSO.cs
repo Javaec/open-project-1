@@ -7,12 +7,16 @@ public class RaiseVoidEventActionSO : StateActionSO
 {
 	public VoidEventChannelSO voidEvent;
 
-	protected override StateAction CreateAction() => new RaiseVoidEventAction();
+	protected override StateAction CreateAction()
+	{
+		return new RaiseVoidEventAction();
+	}
 }
 
 public class RaiseVoidEventAction : StateAction
 {
-	private VoidEventChannelSO _voidEvent;
+	VoidEventChannelSO _voidEvent;
+
 	public override void Awake(StateMachine stateMachine)
 	{
 		_voidEvent = ((RaiseVoidEventActionSO)OriginSO).voidEvent;
@@ -20,7 +24,6 @@ public class RaiseVoidEventAction : StateAction
 
 	public override void OnUpdate()
 	{
-
 	}
 
 	public override void OnStateEnter()
@@ -30,6 +33,5 @@ public class RaiseVoidEventAction : StateAction
 
 	public override void OnStateExit()
 	{
-
 	}
 }

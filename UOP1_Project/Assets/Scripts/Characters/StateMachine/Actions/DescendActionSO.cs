@@ -3,14 +3,16 @@ using UOP1.StateMachine;
 using UOP1.StateMachine.ScriptableObjects;
 
 [CreateAssetMenu(menuName = "State Machines/Actions/Descend")]
-public class DescendActionSO : StateActionSO<DescendAction> { }
+public class DescendActionSO : StateActionSO<DescendAction>
+{
+}
 
 public class DescendAction : StateAction
 {
 	//Component references
-	private Protagonist _protagonistScript;
+	Protagonist _protagonistScript;
 
-	private float _verticalMovement;
+	float _verticalMovement;
 
 	public override void Awake(StateMachine stateMachine)
 	{

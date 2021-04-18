@@ -6,7 +6,11 @@ using UOP1.StateMachine.ScriptableObjects;
 public class FaceProtagonistSO : StateActionSO
 {
 	public TransformAnchor playerAnchor;
-	protected override StateAction CreateAction() => new FaceProtagonist();
+
+	protected override StateAction CreateAction()
+	{
+		return new FaceProtagonist();
+	}
 }
 
 public class FaceProtagonist : StateAction
@@ -34,6 +38,5 @@ public class FaceProtagonist : StateAction
 
 	public override void OnStateEnter()
 	{
-
 	}
 }

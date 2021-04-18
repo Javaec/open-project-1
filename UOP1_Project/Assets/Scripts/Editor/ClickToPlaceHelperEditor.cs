@@ -4,7 +4,13 @@ using UnityEngine;
 [CustomEditor(typeof(ClickToPlaceHelper))]
 public class ClickToPlaceHelperEditor : Editor
 {
-	private ClickToPlaceHelper _clickHelper => target as ClickToPlaceHelper;
+	ClickToPlaceHelper _clickHelper
+	{
+		get
+		{
+			return target as ClickToPlaceHelper;
+		}
+	}
 
 	public override void OnInspectorGUI()
 	{
@@ -17,7 +23,7 @@ public class ClickToPlaceHelperEditor : Editor
 		}
 	}
 
-	private void DuringSceneGui(SceneView sceneView)
+	void DuringSceneGui(SceneView sceneView)
 	{
 		Event currentGUIEvent = Event.current;
 
@@ -45,6 +51,7 @@ public class ClickToPlaceHelperEditor : Editor
 					SceneView.duringSceneGui -= DuringSceneGui;
 					currentGUIEvent.Use(); // This consumes the event, so that other controls/buttons won't be able to use it
 				}
+
 				break;
 		}
 	}

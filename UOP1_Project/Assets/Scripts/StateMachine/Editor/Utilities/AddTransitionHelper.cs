@@ -7,13 +7,13 @@ using static UnityEditor.EditorGUI;
 
 namespace UOP1.StateMachine.Editor
 {
-	internal class AddTransitionHelper : IDisposable
+	class AddTransitionHelper : IDisposable
 	{
 		internal SerializedTransition SerializedTransition { get; }
-		private readonly SerializedObject _transition;
-		private readonly ReorderableList _list;
-		private readonly TransitionTableEditor _editor;
-		private bool _toggle = false;
+		readonly SerializedObject _transition;
+		readonly ReorderableList _list;
+		readonly TransitionTableEditor _editor;
+		bool _toggle = false;
 
 		internal AddTransitionHelper(TransitionTableEditor editor)
 		{
@@ -28,7 +28,7 @@ namespace UOP1.StateMachine.Editor
 		{
 			position.x += 8;
 			position.width -= 16;
-			var rect = position;
+			Rect rect = position;
 			float listHeight = _list.GetHeight();
 			float singleLineHeight = EditorGUIUtility.singleLineHeight;
 
@@ -84,17 +84,24 @@ namespace UOP1.StateMachine.Editor
 				if (GUI.Button(position, "Add Transition"))
 				{
 					if (SerializedTransition.FromState.objectReferenceValue == null)
+					{
 						Debug.LogException(new ArgumentNullException("FromState"));
+					}
 					else if (SerializedTransition.ToState.objectReferenceValue == null)
+					{
 						Debug.LogException(new ArgumentNullException("ToState"));
+					}
 					else if (SerializedTransition.FromState.objectReferenceValue == SerializedTransition.ToState.objectReferenceValue)
+					{
 						Debug.LogException(new InvalidOperationException("FromState and ToState are the same."));
+					}
 					else
 					{
 						_editor.AddTransition(SerializedTransition);
 						_toggle = false;
 					}
 				}
+
 				position.x += rect.width / 2;
 				if (GUI.Button(position, "Cancel"))
 				{
@@ -119,7 +126,7 @@ namespace UOP1.StateMachine.Editor
 			GC.SuppressFinalize(this);
 		}
 
-		private static void SetupConditionsList(ReorderableList reorderableList)
+		static void SetupConditionsList(ReorderableList reorderableList)
 		{
 			reorderableList.elementHeight *= 2.3f;
 			reorderableList.drawHeaderCallback += rect => GUI.Label(rect, "Conditions");
@@ -127,7 +134,7 @@ namespace UOP1.StateMachine.Editor
 			{
 				int count = list.count;
 				list.serializedProperty.InsertArrayElementAtIndex(count);
-				var prop = list.serializedProperty.GetArrayElementAtIndex(count);
+				SerializedProperty prop = list.serializedProperty.GetArrayElementAtIndex(count);
 				prop.FindPropertyRelative("Condition").objectReferenceValue = null;
 				prop.FindPropertyRelative("ExpectedResult").enumValueIndex = 0;
 				prop.FindPropertyRelative("Operator").enumValueIndex = 0;
@@ -135,35 +142,43 @@ namespace UOP1.StateMachine.Editor
 
 			reorderableList.drawElementCallback += (Rect rect, int index, bool isActive, bool isFocused) =>
 			{
-				var prop = reorderableList.serializedProperty.GetArrayElementAtIndex(index);
+				SerializedProperty prop = reorderableList.serializedProperty.GetArrayElementAtIndex(index);
 				rect = new Rect(rect.x, rect.y + 2.5f, rect.width, EditorGUIUtility.singleLineHeight);
-				var condition = prop.FindPropertyRelative("Condition");
+				SerializedProperty condition = prop.FindPropertyRelative("Condition");
 				if (condition.objectReferenceValue != null)
 				{
 					string label = condition.objectReferenceValue.name;
 					GUI.Label(rect, "If");
 					GUI.Label(new Rect(rect.x + 20, rect.y, rect.width, rect.height), label, EditorStyles.boldLabel);
-					EditorGUI.PropertyField(new Rect(rect.x + rect.width - 180, rect.y, 20, rect.height), condition, GUIContent.none);
+					PropertyField(new Rect(rect.x + rect.width - 180, rect.y, 20, rect.height), condition, GUIContent.none);
 				}
 				else
 				{
-					EditorGUI.PropertyField(new Rect(rect.x, rect.y, 150, rect.height), condition, GUIContent.none);
+					PropertyField(new Rect(rect.x, rect.y, 150, rect.height), condition, GUIContent.none);
 				}
-				EditorGUI.LabelField(new Rect(rect.x + rect.width - 120, rect.y, 20, rect.height), "Is");
-				EditorGUI.PropertyField(new Rect(rect.x + rect.width - 60, rect.y, 60, rect.height), prop.FindPropertyRelative("ExpectedResult"), GUIContent.none);
-				EditorGUI.PropertyField(new Rect(rect.x + 20, rect.y + EditorGUIUtility.singleLineHeight + 5, 60, rect.height), prop.FindPropertyRelative("Operator"), GUIContent.none);
+
+				LabelField(new Rect(rect.x + rect.width - 120, rect.y, 20, rect.height), "Is");
+				PropertyField(new Rect(rect.x + rect.width - 60, rect.y, 60, rect.height), prop.FindPropertyRelative("ExpectedResult"), GUIContent.none);
+				PropertyField(new Rect(rect.x + 20, rect.y + EditorGUIUtility.singleLineHeight + 5, 60, rect.height), prop.FindPropertyRelative("Operator"),
+					GUIContent.none);
 			};
 
 			reorderableList.onChangedCallback += list => reorderableList.serializedProperty.serializedObject.ApplyModifiedProperties();
 			reorderableList.drawElementBackgroundCallback += (Rect rect, int index, bool isActive, bool isFocused) =>
 			{
 				if (isFocused)
-					EditorGUI.DrawRect(rect, ContentStyle.Focused);
+				{
+					DrawRect(rect, ContentStyle.Focused);
+				}
 
 				if (index % 2 != 0)
-					EditorGUI.DrawRect(rect, ContentStyle.ZebraDark);
+				{
+					DrawRect(rect, ContentStyle.ZebraDark);
+				}
 				else
-					EditorGUI.DrawRect(rect, ContentStyle.ZebraLight);
+				{
+					DrawRect(rect, ContentStyle.ZebraLight);
+				}
 			};
 		}
 

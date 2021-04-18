@@ -6,9 +6,8 @@ using UnityEngine.Localization.Components;
 
 public class UIDialogueChoiceFiller : MonoBehaviour
 {
-
-	[SerializeField] private LocalizeStringEvent _choiceText = default;
-	[SerializeField] private DialogueChoiceChannelSO _makeAChoiceEvent = default;
+	[SerializeField] LocalizeStringEvent _choiceText = default;
+	[SerializeField] DialogueChoiceChannelSO _makeAChoiceEvent = default;
 
 	Choice currentChoice;
 
@@ -21,6 +20,8 @@ public class UIDialogueChoiceFiller : MonoBehaviour
 	public void ButtonClicked()
 	{
 		if (_makeAChoiceEvent != null)
+		{
 			_makeAChoiceEvent.RaiseEvent(currentChoice);
+		}
 	}
 }

@@ -18,9 +18,9 @@ public class StartGame : MonoBehaviour
 	public Text startText;
 
 	public Button resetSaveDataButton;
-	private bool _hasSaveData;
+	bool _hasSaveData;
 
-	private void Start()
+	void Start()
 	{
 		_hasSaveData = saveSystem.LoadSaveDataFromDisk();
 
@@ -61,13 +61,13 @@ public class StartGame : MonoBehaviour
 	{
 		yield return StartCoroutine(saveSystem.LoadSavedInventory());
 
-		var locationGuid = saveSystem.saveData._locationId;
-		var asyncOperationHandle = Addressables.LoadAssetAsync<LocationSO>(locationGuid);
+		string locationGuid = saveSystem.saveData._locationId;
+		AsyncOperationHandle<LocationSO> asyncOperationHandle = Addressables.LoadAssetAsync<LocationSO>(locationGuid);
 		yield return asyncOperationHandle;
 		if (asyncOperationHandle.Status == AsyncOperationStatus.Succeeded)
 		{
-			var locationSo = asyncOperationHandle.Result;
-			onPlayButtonPress.RaiseEvent(new[] { (GameSceneSO)locationSo }, showLoadScreen);
+			LocationSO locationSo = asyncOperationHandle.Result;
+			onPlayButtonPress.RaiseEvent(new[] {(GameSceneSO)locationSo}, showLoadScreen);
 		}
 	}
 }

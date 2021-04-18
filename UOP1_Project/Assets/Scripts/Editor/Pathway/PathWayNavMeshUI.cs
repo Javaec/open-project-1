@@ -4,8 +4,8 @@ using UnityEditorInternal;
 
 public class PathWayNavMeshUI
 {
-	private PathwayConfigSO _pathway;
-	private PathwayNavMesh _pathwayNavMesh;
+	PathwayConfigSO _pathway;
+	PathwayNavMesh _pathwayNavMesh;
 
 	public PathWayNavMeshUI(PathwayConfigSO pathway)
 	{
@@ -37,7 +37,6 @@ public class PathWayNavMeshUI
 
 	public void UpdatePath()
 	{
-
 		if (!_pathway.DisplayProbes)
 		{
 			_pathwayNavMesh.UpdatePath();
@@ -70,7 +69,7 @@ public class PathWayNavMeshUI
 		}
 	}
 
-	private void RestorePath()
+	void RestorePath()
 	{
 		bool existsPath = true;
 
@@ -102,5 +101,4 @@ public class PathWayNavMeshUI
 			_pathway.ToggledNavMeshDisplay = !_pathway.DisplayProbes;
 		}
 	}
-
 }

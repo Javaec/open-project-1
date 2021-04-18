@@ -4,37 +4,37 @@ using UnityEngine;
 
 public class LocalPoolTester : MonoBehaviour
 {
-	[SerializeField]
-	private int _initialPoolSize = 5;
+	[SerializeField] int _initialPoolSize = 5;
 
-	private ParticlePoolSO _pool;
-	private ParticleFactorySO _factory;
+	ParticlePoolSO _pool;
+	ParticleFactorySO _factory;
 
-	private void Awake()
+	void Awake()
 	{
-		DontDestroyOnLoad(this.gameObject);
+		DontDestroyOnLoad(gameObject);
 	}
 
-	private IEnumerator Start()
+	IEnumerator Start()
 	{
 		_factory = ScriptableObject.CreateInstance<ParticleFactorySO>();
 		_pool = ScriptableObject.CreateInstance<ParticlePoolSO>();
 		_pool.name = gameObject.name;
 		_pool.Factory = _factory;
-		_pool.SetParent(this.transform);
+		_pool.SetParent(transform);
 		_pool.Prewarm(_initialPoolSize);
 		List<ParticleSystem> particles = _pool.Request(2) as List<ParticleSystem>;
 		foreach (ParticleSystem particle in particles)
 		{
 			StartCoroutine(DoParticleBehaviour(particle));
 		}
+
 		yield return new WaitForSeconds(2);
 		_pool.SetParent(null);
 		yield return new WaitForSeconds(2);
-		_pool.SetParent(this.transform);
+		_pool.SetParent(transform);
 	}
 
-	private IEnumerator DoParticleBehaviour(ParticleSystem particle)
+	IEnumerator DoParticleBehaviour(ParticleSystem particle)
 	{
 		particle.transform.position = Random.insideUnitSphere * 5f;
 		particle.Play();
@@ -43,5 +43,4 @@ public class LocalPoolTester : MonoBehaviour
 		yield return new WaitUntil(() => particle.particleCount == 0);
 		_pool.Return(particle);
 	}
-
 }

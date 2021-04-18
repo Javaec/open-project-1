@@ -5,18 +5,21 @@ using UOP1.StateMachine.ScriptableObjects;
 [CreateAssetMenu(fileName = "GetHitFlashingEffectAction", menuName = "State Machines/Actions/Get Hit Flashing Effect")]
 public class GetHitFlashingEffectActionSO : StateActionSO
 {
-	protected override StateAction CreateAction() => new GetHitFlashingEffectAction();
+	protected override StateAction CreateAction()
+	{
+		return new GetHitFlashingEffectAction();
+	}
 }
 
 public class GetHitFlashingEffectAction : StateAction
 {
-	private float _getHitFlashingDuration;
-	private float _getHitFlashingSpeed;
-	private Color _flashingColor;
+	float _getHitFlashingDuration;
+	float _getHitFlashingSpeed;
+	Color _flashingColor;
 
-	private Material _material;
-	private Color _baseTintColor;
-	private float _innerFlashingTime;
+	Material _material;
+	Color _baseTintColor;
+	float _innerFlashingTime;
 
 	public override void Awake(StateMachine stateMachine)
 	{
@@ -57,7 +60,7 @@ public class GetHitFlashingEffectAction : StateAction
 		}
 	}
 
-	private Color computeGetHitTintingColor()
+	Color computeGetHitTintingColor()
 	{
 		Color finalTintingColor = Color.Lerp(_baseTintColor, _flashingColor, _flashingColor.a);
 		float tintingTiming = (_getHitFlashingDuration - _innerFlashingTime) * _getHitFlashingSpeed / _getHitFlashingDuration;

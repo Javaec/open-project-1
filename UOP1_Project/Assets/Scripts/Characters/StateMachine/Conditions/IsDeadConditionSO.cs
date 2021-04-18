@@ -5,12 +5,15 @@ using UOP1.StateMachine.ScriptableObjects;
 [CreateAssetMenu(fileName = "IsDeadCondition", menuName = "State Machines/Conditions/Is Dead")]
 public class IsDeadConditionSO : StateConditionSO
 {
-	protected override Condition CreateCondition() => new IsDeadCondition();
+	protected override Condition CreateCondition()
+	{
+		return new IsDeadCondition();
+	}
 }
 
 public class IsDeadCondition : Condition
 {
-	private Damageable _damageableScript;
+	Damageable _damageableScript;
 
 	public override void Awake(StateMachine stateMachine)
 	{

@@ -4,9 +4,15 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(ViewCreatorCamera))]
-public class ViewCreatorCameraRelease: Editor
+public class ViewCreatorCameraRelease : Editor
 {
-	private ViewCreatorCamera viewCamera => target as ViewCreatorCamera;
+	ViewCreatorCamera viewCamera
+	{
+		get
+		{
+			return target as ViewCreatorCamera;
+		}
+	}
 
 	public override void OnInspectorGUI()
 	{

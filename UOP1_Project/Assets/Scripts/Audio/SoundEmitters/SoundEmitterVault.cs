@@ -2,9 +2,9 @@
 
 public class SoundEmitterVault
 {
-	private int _nextUniqueKey = 0;
-	private List<AudioCueKey> _emittersKey;
-	private List<SoundEmitter[]> _emittersList;
+	int _nextUniqueKey = 0;
+	List<AudioCueKey> _emittersKey;
+	List<SoundEmitter[]> _emittersList;
 
 	public SoundEmitterVault()
 	{
@@ -53,7 +53,7 @@ public class SoundEmitterVault
 		return RemoveAt(index);
 	}
 
-	private bool RemoveAt(int index)
+	bool RemoveAt(int index)
 	{
 		if (index < 0)
 		{

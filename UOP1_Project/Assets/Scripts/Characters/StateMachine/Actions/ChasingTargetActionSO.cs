@@ -6,24 +6,40 @@ using UOP1.StateMachine.ScriptableObjects;
 [CreateAssetMenu(fileName = "ChasingTargetAction", menuName = "State Machines/Actions/Chasing Target Action")]
 public class ChasingTargetActionSO : StateActionSO
 {
-	[Tooltip("Target transform anchor.")]
-	[SerializeField] private TransformAnchor _targetTransform = default;
+	[Tooltip("Target transform anchor.")] [SerializeField]
+	TransformAnchor _targetTransform = default;
 
-	[Tooltip("NPC chasing speed")]
-	[SerializeField] private float _chasingSpeed = default;
+	[Tooltip("NPC chasing speed")] [SerializeField]
+	float _chasingSpeed = default;
 
-	public Vector3 TargetPosition => _targetTransform.Transform.position;
-	public float ChasingSpeed => _chasingSpeed;
+	public Vector3 TargetPosition
+	{
+		get
+		{
+			return _targetTransform.Transform.position;
+		}
+	}
 
-	protected override StateAction CreateAction() => new ChasingTargetAction();
+	public float ChasingSpeed
+	{
+		get
+		{
+			return _chasingSpeed;
+		}
+	}
+
+	protected override StateAction CreateAction()
+	{
+		return new ChasingTargetAction();
+	}
 }
 
 public class ChasingTargetAction : StateAction
 {
-	private Critter _critter;
-	private ChasingTargetActionSO _config;
-	private NavMeshAgent _agent;
-	private bool _isActiveAgent;
+	Critter _critter;
+	ChasingTargetActionSO _config;
+	NavMeshAgent _agent;
+	bool _isActiveAgent;
 
 	public override void Awake(StateMachine stateMachine)
 	{

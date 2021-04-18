@@ -5,7 +5,7 @@ using System.Linq;
 
 public class PathwayNavMesh
 {
-	private PathwayConfigSO _pathway;
+	PathwayConfigSO _pathway;
 
 	public PathwayNavMesh(PathwayConfigSO pathway)
 	{
@@ -30,7 +30,6 @@ public class PathwayNavMesh
 			else
 			{
 				_pathway.Hits[index] = hasHit;
-
 			}
 
 			if (hasHit)
@@ -46,7 +45,7 @@ public class PathwayNavMesh
 		return hasHit;
 	}
 
-	private List<Vector3> GetPathCorners(int startIndex, int endIndex)
+	List<Vector3> GetPathCorners(int startIndex, int endIndex)
 	{
 		NavMeshPath navMeshPath = new NavMeshPath();
 
@@ -56,10 +55,12 @@ public class PathwayNavMesh
 		}
 
 		else
+		{
 			return null;
+		}
 	}
 
-	private bool CopyCorners(int startIndex, int endIndex)
+	bool CopyCorners(int startIndex, int endIndex)
 	{
 		List<Vector3> result;
 
@@ -84,7 +85,6 @@ public class PathwayNavMesh
 			}
 			else if (index == _pathway.Waypoints.Count - 1)
 			{
-
 				canUpdate = CopyCorners(index - 1, index);
 				canUpdate &= CopyCorners(index, 0);
 			}
@@ -113,5 +113,4 @@ public class PathwayNavMesh
 			_pathway.Path.Clear();
 		}
 	}
-
 }

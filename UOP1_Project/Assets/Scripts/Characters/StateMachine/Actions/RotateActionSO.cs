@@ -12,12 +12,19 @@ public class RotateActionSO : StateActionSO<RotateAction>
 public class RotateAction : StateAction
 {
 	//Component references
-	private Protagonist _protagonistScript;
-	private Transform _transform;
+	Protagonist _protagonistScript;
+	Transform _transform;
 
-	private float _turnSmoothSpeed; //Used by Mathf.SmoothDampAngle to smoothly rotate the character to their movement direction
-	private const float ROTATION_TRESHOLD = .02f; // Used to prevent NaN result causing rotation in a non direction
-	private RotateActionSO _originSO => (RotateActionSO)base.OriginSO; // The SO this StateAction spawned from
+	float _turnSmoothSpeed; //Used by Mathf.SmoothDampAngle to smoothly rotate the character to their movement direction
+	const float ROTATION_TRESHOLD = .02f; // Used to prevent NaN result causing rotation in a non direction
+
+	RotateActionSO _originSO
+	{
+		get
+		{
+			return (RotateActionSO)OriginSO; // The SO this StateAction spawned from
+		}
+	}
 
 	public override void Awake(StateMachine stateMachine)
 	{
